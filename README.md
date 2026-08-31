@@ -1,4 +1,4 @@
-# AVFenix Coder - Starter Pack
+# AVFenix Coder
 
 ## Requisitos
 * Python >= 3.10
