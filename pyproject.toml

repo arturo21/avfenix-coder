@@ -15,6 +15,6 @@ dependencies = [
     "requests>=2.31.0",      # Cliente HTTP para listado de modelos
     "textual>=0.75.0",       # 🆕 REQUERIDA: Interfaz gráfica de terminal asíncrona
 ]
-
+ 
 [project.scripts]
 avfenix = "main:app"    
