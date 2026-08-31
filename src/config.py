@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import requests
 from dotenv import load_dotenv
@@ -7,8 +8,15 @@ load_dotenv()
 console = Console()
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-# Fallback genérico para evitar errores NameError / ImportError
-FALLBACK_FREE_MODELS = ["openrouter/free"]
+
+# Fallback genérico y preferido para evitar errores NameError / ImportError
+FALLBACK_FREE_MODELS = [
+    "meta-llama/llama-3.3-70b-instruct:free",
+    "qwen/qwen-2.5-72b-instruct:free",
+    "mistralai/mistral-small-24b-instruct-2501:free",
+    "openrouter/free"
+]
+
 
 def get_available_free_models() -> list[str]:
     """
@@ -21,39 +29,57 @@ def get_available_free_models() -> list[str]:
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         data = response.json().get("data", [])
-        
+
         free_models = []
         for model in data:
             model_id = model.get("id", "")
-            
+
             # Exclusión explícita de modelos Gemini
             if "gemini" in model_id.lower():
                 continue
-                
+
             pricing = model.get("pricing", {})
             prompt_cost = float(pricing.get("prompt", 0))
             completion_cost = float(pricing.get("completion", 0))
-            
+
             # Verificar si el modelo es gratuito según sus métricas de precio o sufijo
             if (prompt_cost == 0.0 and completion_cost == 0.0) or model_id.endswith(":free"):
                 free_models.append(model_id)
-                
-        return free_models
+
+        return free_models if free_models else FALLBACK_FREE_MODELS
     except Exception as e:
-        console.print(f"[yellow]Advertencia: No se pudo obtener la lista de modelos de OpenRouter ({e}).[/yellow]")
-        return []
+        console.print(
+            f"[yellow]Advertencia: No se pudo obtener la lista de modelos de OpenRouter ({e}).[/yellow]"
+        )
+        return FALLBACK_FREE_MODELS
+
 
 def select_best_free_model(free_models: list[str]) -> str:
     """
     Selecciona un modelo gratuito a partir del array obtenido de OpenRouter.
-    Si la lista está vacía o no hay coincidencia, retorna el router oficial 'openrouter/free'.
+    Prioriza modelos potentes para codificación.
+    Si la lista está vacía o no hay coincidencia, retorna 'openrouter/free'.
     """
     # Filtrar activamente residuos de Gemini en caso de que alguno haya pasado
     clean_free_models = [m for m in free_models if "gemini" not in m.lower()]
-    
+
     if clean_free_models:
-        # Devuelve el primer modelo gratuito reportado por OpenRouter
+        # Lista ordenada de preferencias con modelos activos y vigentes
+        preferences = [
+            "meta-llama/llama-3.3-70b-instruct:free",
+            "qwen/qwen-2.5-72b-instruct:free",
+            "mistralai/mistral-small-24b-instruct-2501:free",
+            "deepseek/deepseek-r1:free",
+            "meta-llama/llama-3.1-8b-instruct:free"
+        ]
+
+        # Si alguno de nuestros modelos preferidos está disponible, lo elegimos de inmediato
+        for pref in preferences:
+            if pref in clean_free_models:
+                return pref
+
+        # Corregido: Retorna el primer elemento (str) en lugar del objeto list completo
         return clean_free_models[0]
-        
-    # Si la API no devolvió nada o falló, usa el router automático de modelos gratuitos de OpenRouter
+
+    # Si la API no devolvió nada o falló, usa el router automático de OpenRouter
     return "openrouter/free"

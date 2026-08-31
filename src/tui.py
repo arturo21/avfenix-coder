@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 import openai
+import re
 from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal
 from textual.widgets import Header, Footer, Input, RichLog, Button, Label
 from textual import work
 from src.config import OPENROUTER_API_KEY, get_available_free_models, select_best_free_model, FALLBACK_FREE_MODELS
+from src.prompts import SYSTEM_PROMPT
+from src.tools import read_file, write_file, patch_file, make_directory, list_directory, move_file
 
 class AVFenixApp(App):
-    """
-    Interfaz Gráfica de Terminal (TUI) para AVFenix Coder.
-    Modelada para ser 100% compatible con múltiples versiones de Textual.
-    """
     CSS = """
     Screen {
         background: #1e1e2e;
     }
     #sidebar {
-        width: 30;
+        width: 32;
         background: #11111b;
         border-right: tall #89b4fa;
         padding: 1 2;
@@ -63,10 +62,17 @@ class AVFenixApp(App):
         text-style: bold;
         margin-bottom: 1;
     }
+    .history-area {
+        background: #1e1e2e;
+        border: dashed #45475a;
+        height: 12;
+        margin-top: 1;
+        padding: 0 1;
+    }
     """
 
     TITLE = "AVFenix Coder"
-    SUBTITLE = "TUI Autónoma de Codificación 100% Gratuita"
+    SUBTITLE = "Agente Autónomo de Codificación"
     BINDINGS = [("q", "quit", "Salir")]
 
     def __init__(self):
@@ -74,6 +80,7 @@ class AVFenixApp(App):
         self.selected_model = "Buscando..."
         self.client = None
         self.candidates = FALLBACK_FREE_MODELS
+        self.chat_history = []  # Memoria conversacional
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
@@ -86,25 +93,28 @@ class AVFenixApp(App):
                 yield Label("\n[bold]Modelo Activo:[/bold]")
                 self.model_label = Label("Cargando...", classes="status-loading")
                 yield self.model_label
-                yield Label("\n[bold gray]Instrucciones:[/bold gray]\nEscribe en la caja de texto y presiona Enter o el botón Enviar.\n\nPresiona 'Q' para salir de la aplicación de forma segura.")
+                yield Label("\n[bold]Historial de Acciones:[/bold]")
+                self.action_log = RichLog(classes="history-area", highlight=True, markup=True)
+                yield self.action_log
+                yield Label("\n[bold gray]Instrucciones:[/bold gray]\nEscribe en el chat para interactuar con tu agente autónomo de desarrollo.")
             with Vertical(id="chat-container"):
                 self.chat_log = RichLog(id="chat-area", highlight=True, markup=True)
                 yield self.chat_log
                 with Horizontal(id="input-container"):
-                    self.user_input = Input(placeholder="Escribe tu consulta o tarea aquí...")
+                    self.user_input = Input(placeholder="Pídele crear, editar o analizar archivos...")
                     yield self.user_input
                     yield Button("Enviar", variant="primary", id="send-btn")
         yield Footer()
 
     def on_mount(self) -> None:
-        self.chat_log.write("[bold green]¡Bienvenido a la interfaz gráfica de AVFenix Coder![/bold green]\nBuscando conexión segura con OpenRouter...\n")
+        self.chat_log.write("[bold green]¡Bienvenido a la interfaz autónoma de AVFenix Coder![/bold green]\nInicializando entorno asíncrono...\n")
         self.initialize_agent()
 
     @work(thread=True)
     def initialize_agent(self) -> None:
         if not OPENROUTER_API_KEY:
             self.call_from_thread(self.update_status, "❌ Falta .env", "Configura .env", "status-loading")
-            self.call_from_thread(self.chat_log.write, "[bold red]Error: No se encontró OPENROUTER_API_KEY en tu archivo .env[/bold red]")
+            self.call_from_thread(self.chat_log.write, "[bold red]Error: No se encontró la clave en tu .env[/bold red]")
             return
 
         self.client = openai.OpenAI(
@@ -120,11 +130,11 @@ class AVFenixApp(App):
             
             self.call_from_thread(self.update_status, "✅ Conectado", best_model, "status-ok")
             self.call_from_thread(self.chat_log.write, f"[green]Conectado con éxito a OpenRouter.[/green]")
-            self.call_from_thread(self.chat_log.write, f"Modelo óptimo seleccionado: [bold cyan]{best_model}[/bold cyan]\n")
+            self.call_from_thread(self.chat_log.write, f"Modelo autónomo activo: [bold cyan]{best_model}[/bold cyan]\n")
         except Exception as e:
-            self.call_from_thread(self.chat_log.write, f"[yellow]Advertencia al cargar modelos: {e}. Usando modelos de respaldo seguro.[/yellow]")
-            self.selected_model = FALLBACK_FREE_MODELS
-            self.call_from_thread(self.update_status, "⚠️ Modo Seguro", self.selected_model, "status-loading")
+            # ✅ CORRECCIÓN CRUCIAL: Usamos FALLBACK_FREE_MODELS[0] (un string) en lugar de la lista completa
+            self.selected_model = FALLBACK_FREE_MODELS[0]
+            self.call_from_thread(self.update_status, "⚠️ Modo Respaldo", self.selected_model, "status-loading")
 
     def update_status(self, status: str, model: str, css_class: str) -> None:
         self.status_label.update(status)
@@ -132,22 +142,16 @@ class AVFenixApp(App):
         self.model_label.update(model)
         self.model_label.set_classes(css_class)
 
-    # =========================================================================
-    # 🔄 MANEJO NATIVO DE EVENTOS POR CONVENCIÓN DE NOMBRES (100% COMPATIBLE)
-    # =========================================================================
-
     def on_input_submitted(self, event: Input.Submitted) -> None:
-        """Se activa automáticamente cuando el usuario pulsa Enter en el campo de texto."""
         prompt = event.value.strip()
         if not prompt:
             return
         self.user_input.value = ""
         self.chat_log.write(f"\n[bold cyan]Tú:[/bold cyan] {prompt}")
         self.user_input.disabled = True
-        self.query_model(prompt)
+        self.run_agent_loop(prompt)
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Se activa automáticamente cuando el usuario hace clic en cualquier botón."""
         if event.button.id == "send-btn":
             prompt = self.user_input.value.strip()
             if not prompt:
@@ -155,48 +159,116 @@ class AVFenixApp(App):
             self.user_input.value = ""
             self.chat_log.write(f"\n[bold cyan]Tú:[/bold cyan] {prompt}")
             self.user_input.disabled = True
-            self.query_model(prompt)
-
-    # =========================================================================
+            self.run_agent_loop(prompt)
 
     @work(thread=True)
-    def query_model(self, prompt: str) -> None:
+    def run_agent_loop(self, user_prompt: str) -> None:
+        """Bucle de ejecución autónomo (Agent Loop) que intercepta XML y ejecuta herramientas localmente."""
         if not self.client:
-            self.call_from_thread(self.chat_log.write, "[red]Error: API Key no configurada.[/red]")
+            self.call_from_thread(self.chat_log.write, "[red]Error: API Key ausente.[/red]")
             self.call_from_thread(self.enable_input)
             return
 
-        self.call_from_thread(self.chat_log.write, "[italic yellow]AVFenix Coder está analizando tu solicitud...[/italic yellow]")
+        # Añadir prompt del usuario al historial
+        self.chat_history.append({"role": "user", "content": user_prompt})
         
-        success = False
-        for current_model in self.candidates:
-            try:
-                response = self.client.chat.completions.create(
-                    model=current_model,
-                    messages=[
-                        {"role": "system", "content": "Eres AVFenix Coder, un asistente de codificación experto e inteligente."},
-                        {"role": "user", "content": prompt}
-                    ]
-                )
-                
-                answer = response.choices[0].message.content
-                
-                self.call_from_thread(self.chat_log.write, f"\n[bold green]AVFenix Coder ({current_model}):[/bold green]")
-                self.call_from_thread(self.chat_log.write, answer)
-                
-                if self.selected_model != current_model:
-                    self.selected_model = current_model
-                    self.call_from_thread(self.update_status, "✅ Conectado", current_model, "status-ok")
-                
-                success = True
+        # Límite de seguridad de iteraciones autónomas para evitar bucles infinitos
+        max_iterations = 8
+        current_iteration = 0
+        
+        while current_iteration < max_iterations:
+            current_iteration += 1
+            self.call_from_thread(self.chat_log.write, f"[italic yellow]🦅 Analizando archivos y procesando paso {current_iteration}...[/italic yellow]")
+            
+            success = False
+            response_text = ""
+            active_model = ""
+            
+            # Intentar llamada a OpenRouter con reintentos automáticos de resiliencia
+            for current_model in self.candidates:
+                try:
+                    response = self.client.chat.completions.create(
+                        model=current_model,
+                        messages=[{"role": "system", "content": SYSTEM_PROMPT}] + self.chat_history
+                    )
+                    # Indexado de lista de opciones corregido para evitar AttributeErrors
+                    response_text = response.choices[0].message.content
+                    active_model = current_model
+                    success = True
+                    break
+                except Exception as e:
+                    self.call_from_thread(self.chat_log.write, f"[yellow]⚠️ Fallo con {current_model}: {e}. Intentando respaldo...[/yellow]")
+            
+            if not success:
+                self.call_from_thread(self.chat_log.write, "[bold red]❌ Error crítico: Ningún modelo gratuito pudo procesar tu solicitud.[/bold red]")
                 break
-            except Exception as e:
-                self.call_from_thread(self.chat_log.write, f"[yellow]⚠️ El modelo '{current_model}' falló: {e}. Intentando con el siguiente...[/yellow]")
-        
-        if not success:
-            self.call_from_thread(self.chat_log.write, "\n[bold red]❌ Error crítico: Todos los modelos de respaldo fallaron.[/bold red]")
 
+            # Mostrar respuesta intermedia del agente
+            self.call_from_thread(self.chat_log.write, f"\n[bold green]AVFenix Coder ({active_model}):[/bold green]")
+            self.call_from_thread(self.chat_log.write, response_text)
+            
+            # Guardar en memoria la respuesta de la IA
+            self.chat_history.append({"role": "assistant", "content": response_text})
+
+            # Analizar si la IA quiere ejecutar alguna herramienta XML
+            tool_executed, tool_result = self.parse_and_execute_xml_tool(response_text)
+            
+            if tool_executed:
+                # Escribir el resultado de la acción local en la caja de sistema
+                self.call_from_thread(self.action_log.write, f"⚙️ {tool_result.split(':')}")
+                self.call_from_thread(self.chat_log.write, f"\n[bold gray][Sistema - Resultado de Herramienta]:[/bold gray]\n{tool_result}")
+                
+                # Inyectar el resultado de vuelta en la conversación para que la IA sepa qué pasó
+                self.chat_history.append({"role": "user", "content": f"[Resultado de herramienta local]:\n{tool_result}"})
+            else:
+                # Si el modelo no invocó ninguna etiqueta XML, ha concluido la tarea autónoma
+                break
+                
         self.call_from_thread(self.enable_input)
+
+    def parse_and_execute_xml_tool(self, text: str) -> tuple[bool, str]:
+        """Analiza expresiones regulares en busca de etiquetas XML de herramientas locales."""
+        # 1. <list_directory/>
+        m = re.search(r'<list_directory\s+path=["\'](.*?)["\']\s*/>', text)
+        if m:
+            path = m.group(1)
+            return True, list_directory(path)
+
+        # 2. <make_directory/>
+        m = re.search(r'<make_directory\s+path=["\'](.*?)["\']\s*/>', text)
+        if m:
+            path = m.group(1)
+            return True, make_directory(path)
+
+        # 3. <read_file/>
+        m = re.search(r'<read_file\s+path=["\'](.*?)["\']\s*/>', text)
+        if m:
+            path = m.group(1)
+            return True, read_file(path)
+
+        # 4. <write_file>content</write_file>
+        m = re.search(r'<write_file\s+path=["\'](.*?)["\']\s*>(.*?)</write_file>', text, re.DOTALL)
+        if m:
+            path, content = m.group(1), m.group(2)
+            return True, write_file(path, content)
+
+        # 5. <patch_file>...<search>...<replace>...</patch_file>
+        m = re.search(r'<patch_file\s+path=["\'](.*?)["\']\s*>(.*?)</patch_file>', text, re.DOTALL)
+        if m:
+            path, raw_patch = m.group(1), m.group(2)
+            search_match = re.search(r'<search>(.*?)</search>', raw_patch, re.DOTALL)
+            replace_match = re.search(r'<replace>(.*?)</replace>', raw_patch, re.DOTALL)
+            if search_match and replace_match:
+                return True, patch_file(path, search_match.group(1), replace_match.group(1))
+            return True, "[Error] Formato de patch_file incorrecto. Debe contener <search> y <replace>."
+
+        # 6. <move_file/>
+        m = re.search(r'<move_file\s+source=["\'](.*?)["\']\s+destination=["\'](.*?)["\']\s*/>', text)
+        if m:
+            src, dest = m.group(1), m.group(2)
+            return True, move_file(src, dest)
+
+        return False, ""
 
     def enable_input(self) -> None:
         self.user_input.disabled = False
