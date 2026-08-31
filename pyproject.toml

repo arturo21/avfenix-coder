@@ -1,0 +1,20 @@
+[project]
+name = "avfenix-coder"
+version = "0.3.0"
+description = "Agente autónomo de codificación AVFenix Coder con TUI moderna usando Textual"
+authors = [
+    {name = "AVFenix Team"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.0.0",        # SDK compatible con OpenRouter
+    "python-dotenv>=1.0.0",  # Para claves .env de forma segura
+    "rich>=13.0.0",          # Diseño enriquecido
+    "typer>=0.9.0",          # Procesador del CLI
+    "requests>=2.31.0",      # Cliente HTTP para listado de modelos
+    "textual>=0.75.0",       # 🆕 REQUERIDA: Interfaz gráfica de terminal asíncrona
+]
+
+[project.scripts]
+avfenix = "main:app"    
