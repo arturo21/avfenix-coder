@@ -1,0 +1,64 @@
+{
+  "version": "1.0",
+  "tab_counter": 1,
+  "active_tab_id": "tab-1",
+  "prompt_history": [
+    "hola",
+    "como conecto el mcp de unity con avfenix coder?"
+  ],
+  "conversations": {
+    "tab-1": {
+      "title": "Conversación 1",
+      "chat_history": [
+        {
+          "role": "user",
+          "content": "hola"
+        },
+        {
+          "role": "assistant",
+          "content": "¡Hola! 👋 Soy AVFenix Coder, tu agente autónomo de codificación. Estoy listo para ayudarte con cualquier tarea de programación: escribir código, depurar, inspeccionar archivos, organizar proyectos, ejecutar pruebas, y mucho más.\n\n¿En qué puedo ayudarte hoy? 🚀"
+        },
+        {
+          "role": "user",
+          "content": "como conecto el mcp de unity con avfenix coder?"
+        },
+        {
+          "role": "assistant",
+          "content": "¡Excelente pregunta! 🎮 Voy a buscar información actualizada sobre el MCP de Unity y cómo integrarlo con AVFenix Coder.\n<fetch_web_page url=\"https://docs.unity3d.com/Packages/com.unity.mcp@latest\"/>\n<search_code query=\"unity mcp server integration\" directory=\".\"/>\n<find_files pattern=\"*mcp*\" directory=\".\"/>"
+        },
+        {
+          "role": "user",
+          "content": "[Resultado de herramienta local]:\nNo se encontraron coincidencias para 'unity mcp server integration' en '.'."
+        },
+        {
+          "role": "assistant",
+          "content": "Voy a explorar más a fondo el tema y revisar el entorno de trabajo actual.\n<tree_directory path=\".\" max_depth=\"2\"/>\n<fetch_web_page url=\"https://github.com/Unity-Technologies/mcp\"/>\n<fetch_web_page url=\"https://learn.unity.com/howto/mcp-server\"/>"
+        },
+        {
+          "role": "user",
+          "content": "[Resultado de herramienta local]:\n📦 avfenix-coder\n├── 📄 .env\n├── 📄 .gitignore\n├── 📄 LICENSE\n├── 📄 README.md\n├── 📄 app_screenshot.png\n├── 📄 avfenix_session.json\n├── 📄 main.py\n├── 📄 pyproject.toml\n\n└── 📁 src/\n    ├── 📄 __init__.py\n    ├── 📄 agent.py\n    ├── 📄 config.py\n    ├── 📄 main_mcp.py\n    ├── 📄 mcp_client.py\n    ├── 📄 prompts.py\n    ├── 📄 session_manager.py\n    ├── 📄 tools.py\n    ├── 📄 tui.py\n    └── 📄 unity_mcp_server.py"
+        },
+        {
+          "role": "assistant",
+          "content": "Veo que ya tienes un proyecto AVFenix Coder con archivos relacionados con MCP. Déjame inspeccionar los archivos clave para entender la arquitectura actual.\n<read_file path=\"main.py\"/>\n<read_file path=\"src/main_mcp.py\"/>\n<read_file path=\"src/mcp_client.py\"/>\n<read_file path=\"src/unity_mcp_server.py\"/>\n<read_file path=\"src/config.py\"/>\n<read_file path=\"src/agent.py\"/>\n<read_file path=\"src/tools.py\"/>\n<read_file path=\"src/session_manager.py\"/>\n<read_file path=\"src/tui.py\"/>\n<read_file path=\"src/prompts.py\"/>\n<read_file path=\"src/__init__.py\"/>\n<read_file path=\"pyproject.toml\"/>\n<read_file path=\"README.md\"/>\n<read_file path=\".env\"/>"
+        },
+        {
+          "role": "user",
+          "content": "[Resultado de herramienta local]:\n# -*- coding: utf-8 -*-\nimport typer\nfrom src.tui import AVFenixApp\n\napp = typer.Typer(\n    help=\"AVFenix Coder - Agente de Codificación Autónomo con Interfaz de Terminal (TUI)\",\n    add_completion=False\n)\n\n@app.command()\ndef start():\n    \"\"\"\n    Inicia la interfaz gráfica de terminal (TUI) interactiva de AVFenix Coder.\n    \"\"\"\n    tui_app = AVFenixApp()\n    tui_app.run()\n\n@app.callback(invoke_without_command=True)\ndef default(ctx: typer.Context):\n    \"\"\"\n    Punto de entrada por defecto. Si no se pasa ningún comando,\n    inicia la TUI automáticamente para mayor comodidad.\n    \"\"\"\n    if ctx.invoked_subcommand is None:\n        start()\n\nif __name__ == \"__main__\":\n    app()"
+        },
+        {
+          "role": "assistant",
+          "content": "Voy a seguir leyendo los archivos clave del proyecto para entender completamente la arquitectura antes de darte una respuesta completa.\n<read_file path=\"src/main_mcp.py\"/>\n<read_file path=\"src/mcp_client.py\"/>\n<read_file path=\"src/unity_mcp_server.py\"/>\n<read_file path=\"src/config.py\"/>\n<read_file path=\"src/agent.py\"/>\n<read_file path=\"src/tools.py\"/>\n<read_file path=\"src/session_manager.py\"/>\n<read_file path=\"src/tui.py\"/>\n<read_file path=\"src/prompts.py\"/>\n<read_file path=\"src/__init__.py\"/>\n<read_file path=\"pyproject.toml\"/>\n<read_file path=\"README.md\"/>\n<read_file path=\".env\"/>"
+        },
+        {
+          "role": "user",
+          "content": "[Resultado de herramienta local]:\n# -*- coding: utf-8 -*-\n\"\"\"\nmain_mcp.py - Script de demostración de producción para el Cliente MCP.\nInicializa el cliente, se conecta a un servidor MCP local vía STDIO,\ndescubre y consume Tools, Resources y Prompts con manejo completo de errores y logging.\n\"\"\"\n\nimport asyncio\nimport logging\nimport sys\nfrom mcp_client import MCPClientManager, TransportType\n\n\ndef setup_logging():\n    \"\"\"Configura el sistema de logging estándar para consola.\"\"\"\n    logging.basicConfig(\n        level=logging.INFO,\n        format=\"%(asctime)s [%(levelname)s] %(name)s: %(message)s\",\n        handlers=[logging.StreamHandler(sys.stdout)]\n    )\n\n\nasync def main():\n    setup_logging()\n    logger = logging.getLogger(\"MainMCP\")\n\n    logger.info(\"==================================================\")\n    logger.info(\"   DEMOSTRACIÓN DE CLIENTE MCP (Python SDK)      \")\n    logger.info(\"==================================================\")\n\n    # Configuración del Cliente MCP para servidor local vía STDIO\n    # Ejemplo: Conexión a un servidor de archivos o sqlite (p. ej. 'uvx mcp-server-sqlite' o script python)\n    client = MCPClientManager(\n        transport_type=TransportType.STDIO,\n        command=\"python3\",\n        args=[\"-m\", \"mcp.server\"],  # O la ruta a tu servidor MCP local\n        connection_timeout=15.0,\n        max_retries=2,\n        backoff_factor=1.5\n    )\n\n    try:\n        # Iniciar ciclo de vida de conexión asíncrona\n        async with client.connect():\n            logger.info(\"--- 1. DESCUBRIMIENTO DE HERRAMIENTAS (TOOLS) ---\")\n            tools = await client.list_tools()\n            for t in tools:\n                logger.info(f\"  [Tool] {getattr(t, 'name', 'desconocido')}: {getattr(t, 'description', '')}\")\n\n            # Ejemplo de invocación de herramienta si existe alguna\n            if tools:\n                first_tool_name = getattr(tools[0], 'name', None)\n                if first_tool_name:\n                    logger.info(f\"Ejecutando llamada de prueba a la herramienta '{first_tool_name}'...\")\n                    tool_result = await client.call_tool(first_tool_name, arguments={})\n                    logger.info(f\"Resultado de herramienta: {tool_result}\")\n\n            logger.info(\"--- 2. DESCUBRIMIENTO DE RECURSOS (RESOURCES) ---\")\n            resources = await client.list_resources()\n            for r in resources:\n                logger.info(f\"  [Resource] {getattr(r, 'uri', 'desconocido')} - {getattr(r, 'name', '')}\")\n\n            # Ejemplo de lectura de recurso si existe alguno\n            if resources:\n                first_uri = getattr(resources[0], 'uri', None)\n                if first_uri:\n                    logger.info(f\"Leyendo recurso de prueba '{first_uri}'...\")\n                    res_content = await client.read_resource(first_uri)\n                    logger.info(f\"Contenido del recurso: {res_content}\")\n\n            logger.info(\"--- 3. DESCUBRIMIENTO DE PROMPTS (PLANTILLAS) ---\")\n            prompts = await client.list_prompts()\n            for p in prompts:\n                logger.info(f\"  [Prompt] {getattr(p, 'name', 'desconocido')}: {getattr(p, 'description', '')}\")\n\n            # Ejemplo de obtención de prompt si existe alguno\n            if prompts:\n                first_prompt_name = getattr(prompts[0], 'name', None)\n                if first_prompt_name:\n                    logger.info(f\"Renderizando plantilla de prompt '{first_prompt_name}'...\")\n                    prompt_data = await client.get_prompt(first_prompt_name, arguments={})\n                    logger.info(f\"Prompt renderizado: {prompt_data}\")\n\n    except ConnectionError as e:\n        logger.error(f\"Error de conexión con el servidor MCP: {e}\")\n    except Exception as e:\n        logger.error(f\"Fallo durante la ejecución de la sesión MCP: {e}\", exc_info=True)\n\n\nif __name__ == \"__main__\":\n    asyncio.run(main())\n"
+        },
+        {
+          "role": "assistant",
+          "content": "Déjame seguir leyendo el resto de archivos para tener una comprensión completa del proyecto.\n<tool_call>read_file\npath=\"src/mcp_client.py\"\n</tool_call>\n<tool_call>read_file\npath=\"src/unity_mcp_server.py\"\n</tool_call>\n<tool_call>read_file\npath=\"src/config.py\"\n</tool_call>\n<tool_call>read_file\npath=\"src/agent.py\"\n</tool_call>\n<tool_call>read_file\npath=\"src/tools.py\"\n</tool_call>\n<tool_call>read_file\npath=\"src/session_manager.py\"\n</tool_call>\n<tool_call>read_file\npath=\"src/tui.py\"\n</tool_call>\n<tool_call>read_file\npath=\"src/prompts.py\"\n</tool_call>\n<tool_call>read_file\npath=\"src/__init__.py\"\n</tool_call>\n<tool_call>read_file\npath=\"pyproject.toml\"\n</tool_call>\n<tool_call>read_file\npath=\"README.md\"\n</tool_call>\n<tool_call>read_file\npath=\".env\"\n</tool_call>"
+        }
+      ]
+    }
+  }
+}
