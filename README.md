@@ -9,6 +9,12 @@
 
 ---
 
+## 🖼️ Vista Previa de la Interfaz
+
+![AVFenix Coder Screenshot](app_screenshot.png)
+
+---
+
 ## 🌟 Descripción General
 
 **AVFenix Coder** es un agente de software autónomo de desarrollo diseñado para operar directamente desde la terminal. Ofrece una interfaz gráfica moderna (TUI) construida sobre **Textual**, capaz de orquestar modelos de lenguaje a través de **OpenRouter** para inspeccionar, crear, editar (vía parches quirúrgicos), probar y ejecutar código de forma totalmente autónoma.
@@ -143,12 +149,6 @@ python main.py
 - `Flecha Arriba / Abajo`: Navegar por el historial de prompts enviados.
 - `N`: Crear una nueva pestaña de conversación.
 - `Q`: Salir de la aplicación (se guardará la sesión automáticamente).
-
----
-
-## 🖼️ Vista Previa de la Interfaz
-
-![AVFenix Coder Screenshot](app_screenshot.png)
 
 ---
 
