@@ -6,7 +6,8 @@
     "hola",
     "como conecto el mcp de unity con avfenix coder?",
     "qué herramientas disponibles?",
-    "puedes crear archivos, modificar y eliminar archivos?"
+    "puedes crear archivos, modificar y eliminar archivos?",
+    "tu puedes hacer trabajar por objetivos? que te de una tarea y hasta que no lo logres no termines?"
   ],
   "conversations": {
     "tab-1": {
@@ -91,6 +92,14 @@
         {
           "role": "assistant",
           "content": "¡Correcto! El directorio de ejemplo se creó satisfactoriamente. ✅ Eso confirma que mis herramientas de gestión de archivos funcionan correctamente.\n\nAhora volvamos al tema principal. Necesito explorar a fondo tu proyecto AVFenix Coder para ayudarte con la integración del **MCP de Unity**. Déjame leer todos los archivos del proyecto:\n<tool_call>read_file\npath=\"src/mcp_client.py\"/>\n<tool_call>read_file\npath=\"src/unity_mcp_server.py\"/>\n<tool_call>read_file\npath=\"src/config.py\"/>\n<tool_call>read_file\npath=\"src/agent.py\"/>\n<tool_call>read_file\npath=\"src/tools.py\"/>\n<tool_call>read_file\npath=\"src/session_manager.py\"/>\n<tool_call>read_file\npath=\"src/tui.py\"/>\n<tool_call>read_file\npath=\"src/prompts.py\"/>\n<tool_call>read_file\npath=\"src/__init__.py\"/>\n<tool_call>read_file\npath=\"pyproject.toml\"/>\n<tool_call>read_file\npath=\"README.md\"/>\n<tool_call>read_file\npath=\".env\"/>"
+        },
+        {
+          "role": "user",
+          "content": "tu puedes hacer trabajar por objetivos? que te de una tarea y hasta que no lo logres no termines?"
+        },
+        {
+          "role": "assistant",
+          "content": "¡Absolutamente sí! 💪 Esa es precisamente mi esencia como **AVFenix Coder** — un agente autónomo diseñado para trabajar **por objetivos hasta completarlos**.\n\n---\n\n## 🎯 Cómo funciona mi enfoque por objetivos:\n\n### 1. **Recibo tu tarea**\nMe das un objetivo claro (o lo desgloso yo si es necesario).\n\n### 2. **Planifico el camino**\nAnalizo qué archivos, herramientas y pasos necesito para alcanzar el objetivo.\n\n### 3. **Ejecuto paso a paso**\nUso todas mis herramientas disponibles: leer/crear/modificar archivos, ejecutar comandos, buscar código, probar, depurar, etc.\n\n### 4. **Verifico el resultado**\nEjecuto pruebas, reviso que todo funcione correctamente.\n\n### 5. **No me detengo hasta lograrlo**\nSi algo falla, depuro, ajusto y vuelvo a intentar. Repito el ciclo hasta que el objetivo esté **completo y verificado**.\n\n---\n\n## 🚀 Ejemplos de tareas que puedo ejecutar por objetivos:\n\n| Objetivo | Lo que haría |\n|----------|-------------|\n| *\"Conecta el MCP de Unity con AVFenix Coder\"* | Investigar, modificar código, configurar, probar → ✅ |\n| *\"Corrige el error en X archivo\"* | Leer, diagnosticar, parchear, verificar → ✅ |\n| *\"Crea un sistema de autenticación\"* | Diseñar, codificar, testear, documentar → ✅ |\n| *\"Optimiza esta función\"* | Analizar rendimiento, refactorizar, benchmark → ✅ |\n| *\"Organiza este proyecto\"* | Reestructurar carpetas, mover archivos, actualizar imports → ✅ |\n\n---\n\n## 🔥 Volvamos al tema pendiente\n\nTienes un proyecto **AVFenix Coder** con archivos como `unity_mcp_server.py`, `mcp_client.py`, `main_mcp.py`, etc. Todavía no he podido leer todos los archivos del proyecto (hubo interrupciones).\n\n**¿Quieres que me ponga manos a la obra con el objetivo concreto de:**\n\n> **\"Conectar el MCP de Unity con AVFenix Coder y que funcione correctamente\"**\n\nDame la tarea y no descanso hasta que esté funcionando. 🎯🔥"
         }
       ]
     }

@@ -7,17 +7,46 @@ import time
 from datetime import datetime
 import urllib.request
 import re
+import logging
 
-# =========================================================================
-# 🛠️ HERRAMIENTAS NATIVAS DE DISCO Y SISTEMA (16 HERRAMIENTAS)
-# =========================================================================
+logger = logging.getLogger("AVFenixTools")
+
+CURRENT_WORKING_DIR = os.getcwd()
+
+def set_working_dir(path: str) -> str:
+    """Cambia el directorio raíz de trabajo activo para todas las operaciones del agente."""
+    global CURRENT_WORKING_DIR
+    try:
+        abs_path = os.path.abspath(path)
+        if not os.path.exists(abs_path):
+            return f"Error: El directorio '{abs_path}' no existe."
+        if not os.path.isdir(abs_path):
+            return f"Error: '{abs_path}' no es un directorio válido."
+        
+        os.chdir(abs_path)
+        CURRENT_WORKING_DIR = abs_path
+        return f"Éxito: Directorio de trabajo establecido en '{CURRENT_WORKING_DIR}'."
+    except Exception as e:
+        return f"Error al cambiar directorio de trabajo: {e}"
+
+def add_context(path_or_text: str) -> str:
+    """Lee un archivo de documentación o regla de negocio para inyectarlo como contexto."""
+    try:
+        if os.path.exists(path_or_text) and os.path.isfile(path_or_text):
+            with open(path_or_text, "r", encoding="utf-8", errors="ignore") as f:
+                content = f.read()
+            return f"[Contexto Inyectado desde '{path_or_text}']:\n{content}"
+        else:
+            return f"[Contexto Inyectado]:\n{path_or_text}"
+    except Exception as e:
+        return f"Error al cargar contexto: {e}"
 
 def read_file(path: str) -> str:
     """Lee el contenido de un archivo de texto."""
     try:
         if not os.path.exists(path):
             return f"Error: El archivo '{path}' no existe."
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
             return f.read()
     except Exception as e:
         return f"Error al leer el archivo: {e}"
@@ -39,7 +68,7 @@ def patch_file(path: str, search: str, replace: str) -> str:
     try:
         if not os.path.exists(path):
             return f"Error: El archivo '{path}' no existe."
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
             content = f.read()
         if search not in content:
             return f"Error: No se encontró el bloque a buscar en '{path}'."
@@ -89,10 +118,6 @@ def move_file(source: str, destination: str) -> str:
         return f"Éxito: '{source}' movido/renombrado a '{destination}'."
     except Exception as e:
         return f"Error al mover/renombrar: {e}"
-
-# -------------------------------------------------------------------------
-# 🚀 NUEVAS 10 HERRAMIENTAS AVANZADAS
-# -------------------------------------------------------------------------
 
 def execute_command(command: str, timeout: int = 30) -> str:
     """Ejecuta un comando de consola del sistema operativo de forma segura."""

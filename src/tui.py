@@ -1,11 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-tui.py - Interfaz Gráfica de Terminal (TUI) de AVFenix Coder.
-Soporta múltiples conversaciones paralelas (pestañas), historial de prompts con flechas,
-soporte multilínea (Shift+Enter), copia limpia al portapapeles y
-gestión multiproveedor (OpenRouter & AnyAPI) ESTRICTAMENTE con modelos GRATUITOS.
-"""
-
 import openai
 import re
 from rich.markup import escape
@@ -14,20 +7,17 @@ from textual.containers import Vertical, Horizontal
 from textual.widgets import Header, Footer, RichLog, Button, Label, TabbedContent, TabPane, TextArea
 from textual import work, events
 from textual.message import Message
-
 from src.config import (
-    OPENROUTER_API_KEY, ANYAPI_API_KEY,
-    OPENROUTER_BASE_URL, ANYAPI_BASE_URL,
-    get_available_free_models, select_best_free_model, FALLBACK_FREE_MODELS
+    OPENROUTER_API_KEY, ANYAPI_API_KEY, get_multi_provider_free_candidates, FALLBACK_FREE_MODELS
 )
 from src.prompts import SYSTEM_PROMPT
 from src.tools import (
     read_file, write_file, patch_file, make_directory, list_directory, move_file,
     execute_command, search_code, find_files, delete_file, run_tests, git_status,
-    create_backup, get_file_info, fetch_web_page, tree_directory
+    create_backup, get_file_info, fetch_web_page, tree_directory,
+    set_working_dir, add_context
 )
 from src.session_manager import SessionManager
-
 
 class ChatInput(TextArea):
     """
@@ -36,7 +26,6 @@ class ChatInput(TextArea):
     Además, incluye un historial de prompts navegable con las flechas Arriba y Abajo.
     """
     class Submitted(Message):
-        """Mensaje que se emite al presionar Enter."""
         def __init__(self, chat_input: "ChatInput") -> None:
             super().__init__()
             self.chat_input = chat_input
@@ -92,7 +81,6 @@ class ChatInput(TextArea):
                         self.text = self.prompt_history[self.prompt_history_index]
                     lines_new = self.text.split("\n")
                     self.cursor_location = (len(lines_new) - 1, len(lines_new[-1]))
-
 
 class AVFenixApp(App):
     CSS = """
@@ -180,7 +168,6 @@ class AVFenixApp(App):
         margin-top: 1;
         padding: 0 1;
     }
-    
     .tab-header-bar {
         height: 3;
         background: #11111b;
@@ -225,7 +212,7 @@ class AVFenixApp(App):
     """
 
     TITLE = "AVFenix Coder"
-    SUBTITLE = "Agente Autónomo de Codificación (Multi-Proveedor: OpenRouter & AnyAPI)"
+    SUBTITLE = "Agente Autónomo de Codificación (Incansable & Multi-Proveedor - v12)"
     BINDINGS = [
         ("q", "quit", "Salir"),
         ("n", "new_tab", "Nueva Conversación")
@@ -262,7 +249,7 @@ class AVFenixApp(App):
                 yield Label("\n[bold]Historial de Acciones:[/bold]")
                 self.action_log = RichLog(classes="history-area", highlight=True, markup=True)
                 yield self.action_log
-                yield Label("\n[bold gray]Instrucciones:[/bold gray]\nPresiona Enter para enviar. Flechas Arriba/Abajo para historial. Sesión auto-guardada.")
+                yield Label("\n[bold gray]Instrucciones:[/bold gray]\nPresiona Enter para enviar. Shift+Enter para salto de línea. Bucle incansable activo.")
             
             with Vertical(id="chat-container"):
                 with TabbedContent(id="chat-tabs"):
@@ -276,7 +263,7 @@ class AVFenixApp(App):
                         yield RichLog(id="log-tab-1", highlight=True, markup=True)
                 
                 with Horizontal(id="input-container"):
-                    self.user_input = ChatInput(placeholder="Pídele crear, editar, buscar o ejecutar herramientas...")
+                    self.user_input = ChatInput(placeholder="Asígname un objetivo, directorio o tarea...")
                     yield self.user_input
                     yield Button("Enviar", variant="primary", id="send-btn")
         yield Footer()
@@ -284,22 +271,20 @@ class AVFenixApp(App):
     async def on_mount(self) -> None:
         self.initialize_agent()
         
-        # Intentar restaurar sesión guardada
         session_data = self.session_mgr.load_session()
         if session_data:
             await self.restore_session_state(session_data)
         else:
-            self.write_to_tab("tab-1", "[bold green]¡Bienvenido a AVFenix Coder (OpenRouter + AnyAPI - Solo Modelos Gratuitos)![/bold green]\nInicializando entorno asíncrono con proveedores configurados...\n")
+            self.write_to_tab("tab-1", "[bold green]¡Bienvenido a AVFenix Coder![/bold green]\nInicializando motor asíncrono incansable multi-proveedor...\n")
 
     async def restore_session_state(self, data: dict) -> None:
-        """Restaura dinámicamente pestañas, historiales y prompts de una sesión previa."""
         try:
             self.tab_counter = data.get("tab_counter", 1)
             self.user_input.prompt_history = data.get("prompt_history", [])
             self.user_input.prompt_history_index = len(self.user_input.prompt_history)
             
             saved_conversations = data.get("conversations", {})
-            if not saved_conversations or not isinstance(saved_conversations, dict):
+            if not isinstance(saved_conversations, dict) or not saved_conversations:
                 return
 
             self.conversations = saved_conversations
@@ -311,8 +296,6 @@ class AVFenixApp(App):
                     continue
                 tab_title = tab_info.get("title", f"Conversación {tab_id}")
                 chat_history = tab_info.get("chat_history", [])
-                if not isinstance(chat_history, list):
-                    chat_history = []
 
                 if first_tab:
                     first_tab = False
@@ -339,8 +322,9 @@ class AVFenixApp(App):
             self.action_log.write(f"[Error] No se pudo restaurar la sesión: {e}")
 
     def populate_log_history(self, log_widget: RichLog, history: list) -> None:
-        """Escribe las entradas de historial restauradas en el widget de log de forma segura."""
         log_widget.write("[bold gray][Sesión Restaurada][/bold gray]")
+        if not isinstance(history, list):
+            return
         for msg in history:
             if not isinstance(msg, dict):
                 continue
@@ -354,7 +338,6 @@ class AVFenixApp(App):
                 log_widget.write(f"\n[bold gray][Sistema]:[/bold gray]\n{content}")
 
     def auto_save(self) -> None:
-        """Guarda automáticamente el estado actual de la aplicación."""
         try:
             tabbed_content = self.query_one(TabbedContent)
             active_tab = tabbed_content.active
@@ -369,37 +352,28 @@ class AVFenixApp(App):
         )
 
     def on_unmount(self) -> None:
-        """Guarda la sesión automáticamente al cerrar la TUI."""
         self.auto_save()
 
     @work(thread=True)
     def initialize_agent(self) -> None:
         if not OPENROUTER_API_KEY and not ANYAPI_API_KEY:
-            self.call_from_thread(self.update_status, "❌ Falta .env", "Configura OPENROUTER_API_KEY / ANYAPI_API_KEY", "status-loading")
+            self.call_from_thread(self.update_status, "❌ Falta .env", "Configura .env", "status-loading")
             self.call_from_thread(self.write_to_tab, "tab-1", "[bold red]Error: No se encontró OPENROUTER_API_KEY ni ANYAPI_API_KEY en tu .env[/bold red]")
             return
 
         try:
-            candidates = get_available_free_models()
-            best_candidate = select_best_free_model(candidates)
-            
-            if isinstance(best_candidate, dict):
-                self.selected_model = f"{best_candidate['model']} ({best_candidate['provider']})"
-            else:
-                self.selected_model = str(best_candidate)
-
+            candidates = get_multi_provider_free_candidates()
             self.candidates = candidates
-            
-            active_providers = list(set(c["provider"] if isinstance(c, dict) else "OpenRouter" for c in candidates))
-            providers_str = " + ".join(active_providers)
-            
-            self.call_from_thread(self.update_status, f"✅ Conectado ({providers_str})", self.selected_model, "status-ok")
-            self.call_from_thread(self.write_to_tab, "tab-1", f"[green]Conectado con éxito a proveedor(es): {providers_str}.[/green]")
-            self.call_from_thread(self.write_to_tab, "tab-1", f"Modelo activo (SOLO GRATUITO): [bold cyan]{self.selected_model}[/bold cyan]\n")
+            if candidates:
+                best = candidates[0]
+                model_display = f"{best['model']} ({best['provider']})"
+                self.selected_model = model_display
+                self.call_from_thread(self.update_status, "✅ Conectado", model_display, "status-ok")
+                self.call_from_thread(self.write_to_tab, "tab-1", f"[green]Conectado con éxito. Modelo activo: [bold cyan]{model_display}[/bold cyan][/green]\n")
+            else:
+                self.call_from_thread(self.update_status, "⚠️ Sin modelos", "Fallback active", "status-loading")
         except Exception as e:
-            fallback_model = "meta-llama/llama-3.1-8b-instruct:free"
-            self.selected_model = fallback_model
-            self.call_from_thread(self.update_status, "⚠️ Modo Respaldo", self.selected_model, "status-loading")
+            self.call_from_thread(self.update_status, "⚠️ Error init", str(e), "status-loading")
 
     def update_status(self, status: str, model: str, css_class: str) -> None:
         self.status_label.update(status)
@@ -438,7 +412,7 @@ class AVFenixApp(App):
             await tabbed_content.add_pane(new_pane)
             tabbed_content.active = tab_id
             
-            log_widget.write(f"[bold green]¡Sesión de conversación #{self.tab_counter} iniciada de forma aislada![/bold green]\n")
+            log_widget.write(f"[bold green]¡Sesión #{self.tab_counter} iniciada![/bold green]\n")
             self.auto_save()
         except Exception as e:
             self.action_log.write(f"[Error] No se pudo crear la pestaña: {e}")
@@ -450,7 +424,6 @@ class AVFenixApp(App):
             
         try:
             tabbed_content = self.query_one(TabbedContent)
-            
             if tabbed_content.active == tab_id:
                 remaining_tabs = [k for k in self.conversations.keys() if k != tab_id]
                 if remaining_tabs:
@@ -465,12 +438,10 @@ class AVFenixApp(App):
 
     async def copy_conversation_to_clipboard(self, tab_id: str) -> None:
         if tab_id not in self.conversations:
-            self.action_log.write("[yellow]⚠️ No hay conversación para copiar.[/yellow]")
             return
             
         history = self.conversations[tab_id]["chat_history"]
         if not history:
-            self.action_log.write("[yellow]⚠️ La conversación está vacía.[/yellow]")
             return
             
         lines = []
@@ -485,20 +456,13 @@ class AVFenixApp(App):
             self.app.clipboard = formatted_text
             self.action_log.write(f"📋 [green]Historial {tab_id} copiado![/green]")
             self.write_to_tab(tab_id, "\n[bold green][Sistema - Portapapeles]: ¡Conversación copiada al portapapeles![/bold green]\n")
-        except Exception as e:
+        except Exception:
             try:
                 import pyperclip
                 pyperclip.copy(formatted_text)
-                self.action_log.write(f"📋 [green]Copiado con pyperclip ({tab_id})[/green]")
-                self.write_to_tab(tab_id, "\n[bold green][Sistema - Portapapeles]: ¡Conversación copiada al portapapeles![/bold green]\n")
-            except Exception as e2:
-                try:
-                    with open("chat_clipboard_backup.txt", "w", encoding="utf-8") as f_backup:
-                        f_backup.write(formatted_text)
-                    self.action_log.write(f"[⚠️] Guardado en chat_clipboard_backup.txt")
-                    self.write_to_tab(tab_id, f"\n[bold yellow][Sistema]: Copia guardada en disco: 'chat_clipboard_backup.txt'[/bold yellow]\n")
-                except Exception:
-                    self.action_log.write("[Error] No se pudo copiar ni guardar historial.")
+                self.write_to_tab(tab_id, "\n[bold green][Sistema]: Copiado al portapapeles![/bold green]\n")
+            except Exception:
+                pass
 
     async def on_chat_input_submitted(self, event: ChatInput.Submitted) -> None:
         await self.process_user_message()
@@ -545,84 +509,63 @@ class AVFenixApp(App):
 
     @work(thread=True)
     def run_agent_loop(self, user_prompt: str, tab_id: str) -> None:
-        if not OPENROUTER_API_KEY and not ANYAPI_API_KEY:
-            self.call_from_thread(self.write_to_tab, tab_id, "[red]Error: API Keys ausentes o no inicializadas.[/red]")
-            self.call_from_thread(self.enable_input)
-            return
-
+        """Bucle autónomo incansable de ejecución y auto-corrección."""
         if tab_id not in self.conversations:
             self.conversations[tab_id] = {"title": f"Conversación {tab_id}", "chat_history": []}
             
         history = self.conversations[tab_id]["chat_history"]
         history.append({"role": "user", "content": user_prompt})
         
-        max_iterations = 8
+        max_iterations = 12
         current_iteration = 0
         
         while current_iteration < max_iterations:
             current_iteration += 1
-            self.call_from_thread(self.write_to_tab, tab_id, f"[italic yellow]🦅 Analizando archivos y procesando paso {current_iteration}...[/italic yellow]")
+            self.call_from_thread(self.write_to_tab, tab_id, f"[italic yellow]🦅 Procesando objetivo (Paso {current_iteration})...[/italic yellow]")
             
             success = False
             response_text = ""
-            active_model = ""
+            active_model_name = ""
             
-            for candidate in self.candidates:
+            # Reintentos con failover multi-proveedor
+            for cand in self.candidates:
                 try:
-                    if isinstance(candidate, dict):
-                        model_id = candidate.get("model", "")
-                        provider_name = candidate.get("provider", "OpenRouter")
-                        base_url = candidate.get("base_url", OPENROUTER_BASE_URL)
-                        api_key = candidate.get("api_key", OPENROUTER_API_KEY or ANYAPI_API_KEY or "")
-                    else:
-                        model_id = str(candidate)
-                        provider_name = "OpenRouter"
-                        base_url = OPENROUTER_BASE_URL
-                        api_key = OPENROUTER_API_KEY or ""
-
                     client = openai.OpenAI(
-                        base_url=base_url,
-                        api_key=api_key,
+                        base_url=cand["base_url"],
+                        api_key=cand["api_key"]
                     )
-
                     response = client.chat.completions.create(
-                        model=model_id,
+                        model=cand["model"],
                         messages=[{"role": "system", "content": SYSTEM_PROMPT}] + history
                     )
-                    response_text = response.choices[0].message.content
-                    if response_text is None:
-                        response_text = ""
-                    active_model = f"{model_id} ({provider_name})"
+                    response_text = response.choices[0].message.content or ""
+                    active_model_name = f"{cand['model']} ({cand['provider']})"
                     success = True
                     break
                 except Exception as e:
-                    cand_label = candidate.get('model') if isinstance(candidate, dict) else str(candidate)
-                    prov_label = candidate.get('provider') if isinstance(candidate, dict) else "OpenRouter"
-                    self.call_from_thread(
-                        self.write_to_tab,
-                        tab_id,
-                        f"[yellow]⚠️ Fallo con {cand_label} ({prov_label}): {e}. Intentando respaldo...[/yellow]"
-                    )
+                    pass
             
             if not success:
-                self.call_from_thread(self.write_to_tab, tab_id, "[bold red]❌ Error crítico: Ningún modelo gratuito pudo procesar tu solicitud.[/bold red]")
+                self.call_from_thread(self.write_to_tab, tab_id, "[bold red]❌ Error: Ningún proveedor de IA gratuito pudo procesar tu solicitud.[/bold red]")
                 break
 
-            escaped_response = escape(response_text)
-            self.call_from_thread(self.write_to_tab, tab_id, f"\n[bold green]AVFenix Coder ({active_model}):[/bold green]")
-            self.call_from_thread(self.write_to_tab, tab_id, escaped_response)
+            escaped_resp = escape(response_text)
+            self.call_from_thread(self.write_to_tab, tab_id, f"\n[bold green]AVFenix Coder ({active_model_name}):[/bold green]\n{escaped_resp}")
             
             history.append({"role": "assistant", "content": response_text})
 
+            # Analizar y ejecutar herramienta XML
             tool_executed, tool_result = self.parse_and_execute_xml_tool(response_text)
             
             if tool_executed:
-                escaped_tool_res = escape(tool_result)
+                escaped_result = escape(tool_result)
                 self.call_from_thread(self.action_log.write, f"⚙️ {tool_result.split(':')[0]}")
-                self.call_from_thread(self.write_to_tab, tab_id, f"\n[bold gray][Sistema - Resultado de Herramienta]:[/bold gray]\n{escaped_tool_res}")
+                self.call_from_thread(self.write_to_tab, tab_id, f"\n[bold gray][Sistema - Resultado de Herramienta]:[/bold gray]\n{escaped_result}")
                 
+                # Inyectar el resultado de vuelta en el historial para que el agente verifique o corrija
                 history.append({"role": "user", "content": f"[Resultado de herramienta local]:\n{tool_result}"})
             else:
+                # Si el modelo no invocó ninguna herramienta, damos por alcanzado el objetivo
                 break
                 
         self.call_from_thread(self.auto_save)
@@ -632,23 +575,38 @@ class AVFenixApp(App):
         if not text or not isinstance(text, str):
             return False, ""
 
+        # 1. <set_working_dir/>
+        m = re.search(r'<set_working_dir\s+path=[\"\'](.*?)[\"\']\s*/>', text)
+        if m:
+            return True, set_working_dir(m.group(1))
+
+        # 2. <add_context/>
+        m = re.search(r'<add_context\s+path=[\"\'](.*?)[\"\']\s*/>', text)
+        if m:
+            return True, add_context(m.group(1))
+
+        # 3. <list_directory/>
         m = re.search(r'<list_directory(?:\s+path=[\"\'](.*?)[\"\'])?\s*/>', text)
         if m:
             path = m.group(1) if m.group(1) else "."
             return True, list_directory(path)
 
+        # 4. <make_directory/>
         m = re.search(r'<make_directory\s+path=[\"\'](.*?)[\"\']\s*/>', text)
         if m:
             return True, make_directory(m.group(1))
 
+        # 5. <read_file/>
         m = re.search(r'<read_file\s+path=[\"\'](.*?)[\"\']\s*/>', text)
         if m:
             return True, read_file(m.group(1))
 
+        # 6. <write_file>content</write_file>
         m = re.search(r'<write_file\s+path=[\"\'](.*?)[\"\']\s*>(.*?)</write_file>', text, re.DOTALL)
         if m:
             return True, write_file(m.group(1), m.group(2))
 
+        # 7. <patch_file>...<search>...<replace>...</patch_file>
         m = re.search(r'<patch_file\s+path=[\"\'](.*?)[\"\']\s*>(.*?)</patch_file>', text, re.DOTALL)
         if m:
             path, raw_patch = m.group(1), m.group(2)
@@ -658,36 +616,43 @@ class AVFenixApp(App):
                 return True, patch_file(path, search_match.group(1), replace_match.group(1))
             return True, "[Error] Formato de patch_file incorrecto. Debe contener <search> y <replace>."
 
+        # 8. <move_file/>
         m = re.search(r'<move_file\s+source=[\"\'](.*?)[\"\']\s+destination=[\"\'](.*?)[\"\']\s*/>', text)
         if m:
             return True, move_file(m.group(1), m.group(2))
 
+        # 9. <delete_file/>
         m = re.search(r'<delete_file\s+path=[\"\'](.*?)[\"\']\s*/>', text)
         if m:
             return True, delete_file(m.group(1))
 
+        # 10. <tree_directory/>
         m = re.search(r'<tree_directory(?:\s+path=[\"\'](.*?)[\"\'])?(?:\s+max_depth=[\"\'](\d+)[\"\'])?\s*/>', text)
         if m:
             path = m.group(1) if m.group(1) else "."
             max_depth = int(m.group(2)) if m.group(2) else 3
             return True, tree_directory(path, max_depth)
 
+        # 11. <get_file_info/>
         m = re.search(r'<get_file_info\s+path=[\"\'](.*?)[\"\']\s*/>', text)
         if m:
             return True, get_file_info(m.group(1))
 
+        # 12. <search_code/>
         m = re.search(r'<search_code\s+query=[\"\'](.*?)[\"\'](?:\s+directory=[\"\'](.*?)[\"\'])?\s*/>', text)
         if m:
             query = m.group(1)
             directory = m.group(2) if m.group(2) else "."
             return True, search_code(query, directory)
 
+        # 13. <find_files/>
         m = re.search(r'<find_files\s+pattern=[\"\'](.*?)[\"\'](?:\s+directory=[\"\'](.*?)[\"\'])?\s*/>', text)
         if m:
             pattern = m.group(1)
             directory = m.group(2) if m.group(2) else "."
             return True, find_files(pattern, directory)
 
+        # 14. <execute_command>cmd</execute_command> o <execute_command command="cmd"/>
         m = re.search(r'<execute_command(?:\s+timeout=[\"\'](\d+)[\"\'])?\s*>(.*?)</execute_command>', text, re.DOTALL)
         if m:
             timeout = int(m.group(1)) if m.group(1) else 30
@@ -699,20 +664,24 @@ class AVFenixApp(App):
             timeout = int(m2.group(2)) if m2.group(2) else 30
             return True, execute_command(command, timeout)
 
+        # 15. <run_tests/>
         m = re.search(r'<run_tests(?:\s+test_path=[\"\'](.*?)[\"\'])?\s*/>', text)
         if m:
             test_path = m.group(1) if m.group(1) else "."
             return True, run_tests(test_path)
 
+        # 16. <git_status/>
         m = re.search(r'<git_status(?:\s+directory=[\"\'](.*?)[\"\'])?\s*/>', text)
         if m:
             directory = m.group(1) if m.group(1) else "."
             return True, git_status(directory)
 
+        # 17. <create_backup/>
         m = re.search(r'<create_backup\s+path=[\"\'](.*?)[\"\']\s*/>', text)
         if m:
             return True, create_backup(m.group(1))
 
+        # 18. <fetch_web_page/>
         m = re.search(r'<fetch_web_page\s+url=[\"\'](.*?)[\"\']\s*/>', text)
         if m:
             return True, fetch_web_page(m.group(1))
