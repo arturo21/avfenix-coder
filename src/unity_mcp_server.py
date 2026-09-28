@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Unity MCP Server en Python (v2 - Resiliente y Optimizado)
+Unity MCP Server en Python
 Servidor MCP basado en el SDK oficial de Python ('mcp') para actuar como puente
 entre AVFenix Coder (Host) y el Editor de Unity via un Listener HTTP/JSON local.
 """
@@ -9,58 +9,29 @@ import json
 import urllib.request
 import urllib.error
 from typing import Optional, Dict, Any
+from mcp.server.fastmcp import FastMCP
 
-# Manejo de importación resiliente para entornos sin SDK instalado
-try:
-    from mcp.server.fastmcp import FastMCP
-    mcp = FastMCP("Unity-MCP-Server")
-except ImportError:
-    class FastMCPMock:
-        def __init__(self, name: str):
-            self.name = name
-        def tool(self):
-            def decorator(func):
-                return func
-            return decorator
-        def run(self):
-            print(f"[{self.name}] Servidor en modo mock (mcp no instalado).")
-    mcp = FastMCPMock("Unity-MCP-Server")
+# Inicializar servidor FastMCP para Unity
+mcp = FastMCP("Unity-MCP-Server")
 
-UNITY_BRIDGE_URL = "http://localhost:8080/mcp/"
+UNITY_BRIDGE_URL = "http://localhost:8080/mcp"
 
 def send_to_unity(action: str, params: Optional[Dict[str, Any]] = None) -> str:
-    """Envía una solicitud en formato JSON al puente C# en el Editor de Unity."""
+    """Envía una solicitud en formato JSON al puente en C# ejecutándose dentro de Unity."""
     payload = {
         "action": action,
         "params": params or {}
     }
-    data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         UNITY_BRIDGE_URL,
         data=data,
-        headers={"Content-Type": "application/json; charset=utf-8"}
+        headers={"Content-Type": "application/json"}
     )
     try:
         with urllib.request.urlopen(req, timeout=10) as response:
             res_body = response.read().decode("utf-8")
-            
-            # Formatear la respuesta JSON para consumo óptimo del LLM
-            try:
-                parsed = json.loads(res_body)
-                if isinstance(parsed, dict):
-                    if parsed.get("status") == "error":
-                        return f"[Error de Unity]: {parsed.get('message', 'Error desconocido')}"
-                    elif "message" in parsed:
-                        return parsed["message"]
-                    elif "objects" in parsed:
-                        objs = ", ".join(parsed["objects"])
-                        return f"Escena '{parsed.get('scene', 'Activa')}': [{objs}]"
-                    elif "logs" in parsed:
-                        return "--- Consola de Unity ---\n" + "\n".join(parsed["logs"])
-                return json.dumps(parsed, indent=2, ensure_ascii=False)
-            except Exception:
-                return res_body
-
+            return res_body
     except urllib.error.URLError as e:
         return (
             f"[Error de Conexión con Unity]: No se pudo conectar a '{UNITY_BRIDGE_URL}'. "
@@ -136,5 +107,4 @@ def unity_toggle_play_mode(state: bool) -> str:
     return send_to_unity("toggle_play", {"state": state})
 
 if __name__ == "__main__":
-    if hasattr(mcp, 'run'):
-        mcp.run()
+    mcp.run()

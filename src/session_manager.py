@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+"""
+session_manager.py - Gestor de Memoria y Persistencia de Sesión para AVFenix Coder.
+Maneja la lectura, escritura y restauración atómica de pestañas, historiales de chat
+e historial de prompts en formato JSON local.
+"""
+
 import os
 import json
-import copy
 import logging
 from typing import Dict, Any, Optional, List
 
@@ -23,19 +28,15 @@ class SessionManager:
         active_tab_id: Optional[str] = None,
         prompt_history: Optional[List[str]] = None
     ) -> bool:
-        try:
-            safe_conversations = copy.deepcopy(conversations)
-            safe_history = copy.deepcopy(prompt_history or [])
-        except Exception:
-            safe_conversations = conversations
-            safe_history = prompt_history or []
-
+        """
+        Guarda el estado completo de la TUI en un archivo JSON atómico.
+        """
         data = {
             "version": "1.0",
             "tab_counter": tab_counter,
             "active_tab_id": active_tab_id or "tab-1",
-            "prompt_history": safe_history,
-            "conversations": safe_conversations
+            "prompt_history": prompt_history or [],
+            "conversations": conversations
         }
 
         try:
@@ -43,13 +44,18 @@ class SessionManager:
             with open(temp_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
             os.replace(temp_file, self.filepath)
+            logger.debug(f"Sesión guardada exitosamente en '{self.filepath}'.")
             return True
         except Exception as e:
-            logger.error(f"Error al guardar sesión: {e}")
+            logger.error(f"Error al guardar sesión en '{self.filepath}': {e}")
             return False
 
     def load_session(self) -> Optional[Dict[str, Any]]:
+        """
+        Carga y valida el archivo de sesión JSON si existe.
+        """
         if not os.path.exists(self.filepath):
+            logger.info(f"No se encontró archivo de sesión en '{self.filepath}'. Se iniciará sesión limpia.")
             return None
 
         try:
@@ -57,21 +63,22 @@ class SessionManager:
                 data = json.load(f)
 
             if not isinstance(data, dict) or "conversations" not in data:
+                logger.warning("Estructura de archivo de sesión no válida. Ignorando.")
                 return None
 
-            if not isinstance(data.get("conversations"), dict):
-                return None
-
+            logger.info(f"Sesión cargada correctamente desde '{self.filepath}'.")
             return data
         except Exception as e:
-            logger.error(f"Error al leer sesión: {e}")
+            logger.error(f"Error al leer archivo de sesión '{self.filepath}': {e}")
             return None
 
     def clear_session(self) -> bool:
+        """Elimina el archivo de sesión activo."""
         try:
             if os.path.exists(self.filepath):
                 os.remove(self.filepath)
+                logger.info(f"Archivo de sesión '{self.filepath}' eliminado.")
             return True
         except Exception as e:
-            logger.error(f"Error al eliminar sesión: {e}")
+            logger.error(f"Error al eliminar archivo de sesión: {e}")
             return False
