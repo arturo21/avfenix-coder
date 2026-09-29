@@ -1,0 +1,29 @@
+
+# WP Extreme Customize - Hungarian (Magyar) translation
+# Copyright (C) 2024 AVFDigital
+# This file is distributed under the same license as the WP Extreme Customize plugin.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Extreme Customize 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hu_HU\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Login Customizer"
+msgstr "Bejelentkezés testreszabó"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Admin Customizer"
+msgstr "Admin testreszabó"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Email Customizer"
+msgstr "E-mail testreszabó"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgstr "Biztonság extrém"

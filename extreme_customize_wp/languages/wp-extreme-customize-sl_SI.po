@@ -1,0 +1,29 @@
+
+# WP Extreme Customize - Slovenian (Slovenščina) translation
+# Copyright (C) 2024 AVFDigital
+# This file is distributed under the same license as the WP Extreme Customize plugin.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Extreme Customize 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sl_SI\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Login Customizer"
+msgstr "Prilagodnik prijave"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Admin Customizer"
+msgstr "Prilagodnik administratorja"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Email Customizer"
+msgstr "Prilagodnik e-pošte"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgstr "Varnost ekstremna"

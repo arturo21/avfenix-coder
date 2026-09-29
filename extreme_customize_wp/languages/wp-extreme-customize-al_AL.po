@@ -1,0 +1,29 @@
+
+# WP Extreme Customize - Albanian (Shqip) translation
+# Copyright (C) 2024 AVFDigital
+# This file is distributed under the same license as the WP Extreme Customize plugin.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Extreme Customize 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: al_AL\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Login Customizer"
+msgstr "Personalizues hyrje"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Admin Customizer"
+msgstr "Personalizues admin"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgid "Email Customizer"
+msgstr "Personalizues email"
+
+#: extreme_customize_wp/wp-extreme-customize.py:42
+msgstr "Siguria ekstreme"
