@@ -1,102 +1,112 @@
 
 /* WP Extreme Customize - Login Styles */
+
+/* Base styles that can be overridden by customizer */
 body.login {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    background-attachment: fixed;
+    background-color: #f0f0f0;
 }
 
 body.login #login {
-    width: 320px;
-    height: auto;
-    margin: 5% auto 0;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 30px;
 }
 
-body.login #login h1 {
-    margin: 0 0 20px;
-    text-align: center;
+body.login h1 a {
+    background-size: contain;
+    width: 300px;
+    height: 100px;
+    margin: 0 auto 20px;
+    opacity: 1;
 }
 
-body.login #login h1 a {
-    display: block;
-    max-width: 100%;
-    margin: 0 auto;
-}
-
-body.login #login h1 a img {
-    width: 100%;
-    height: auto;
-    max-width: 280px;
-}
-
-body.login form {
-    margin: 0;
-    padding: 0;
-}
-
-body.login .user-pass {
-    margin: 15px 0;
-}
-
-body.login #wp-submit {
-    width: 100%;
-    height: 44px;
-    margin: 15px 0;
-    border: none;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    font-size: 16px;
+body.login .wp-core-ui .button-primary {
+    background: #764ba2;
+    border-color: #764ba2;
+    box-shadow: none;
+    text-shadow: none;
+    padding: 12px 24px;
     font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
 }
 
-body.login #wp-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+body.login .wp-core-ui .button-primary:hover,
+body.login .wp-core-ui .button-primary:focus {
+    background: #5a3a7a;
+    border-color: #5a3a7a;
 }
 
-body.login #nav {
-    text-align: center;
-    margin: 20px 0;
+body.login label {
+    color: #333;
+    font-weight: 600;
 }
 
-body.login #nav a {
-    color: rgba(255,255,255,0.8);
+body.login input[type="text"],
+body.login input[type="password"],
+body.login input[type="email"] {
+    background: #fff;
+    border-color: #ddd;
+    border-radius: 4px;
+    padding: 10px 12px;
+}
+
+body.login input[type="text"]:focus,
+body.login input[type="password"]:focus,
+body.login input[type="email"]:focus {
+    border-color: #764ba2;
+    box-shadow: 0 0 0 1px #764ba2;
+}
+
+body.login a {
+    color: #764ba2;
     text-decoration: none;
-    margin: 0 10px;
 }
 
-body.login #nav a:hover {
-    color: white;
+body.login a:hover {
+    color: #5a3a7a;
+    text-decoration: underline;
 }
 
-body.login #backtoblog {
-    text-align: center;
+body.login .message,
+body.login .error {
+    border-left: 4px solid #764ba2;
+    padding: 12px 15px;
     margin: 15px 0;
+    border-radius: 4px;
 }
 
-body.login #backtoblog a {
-    color: rgba(255,255,255,0.8);
-    text-decoration: none;
+body.login .message.error,
+body.login .error {
+    border-left-color: #dc3232;
+    background: #fff0f0;
 }
 
-/* Personalizaciones adicionales */
-.wpec-login-logo {
-    max-width: 100%;
-    height: auto;
+body.login .message.success,
+body.login .success {
+    border-left-color: #28a745;
+    background: #f0fff4;
 }
 
-.wpec-login-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-size: cover;
-    background-position: center;
+#backtoblog,
+#nav {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#backtoblog a,
+#nav a {
+    color: #764ba2 !important;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    body.login #login {
+        padding: 20px 15px;
+        margin: 20px auto;
+    }
+    
+    body.login h1 a {
+        width: 250px;
+        height: 80px;
+    }
 }

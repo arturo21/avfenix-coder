@@ -2,6 +2,7 @@
 # WP Extreme Customize translation template
 # Copyright (C) 2024 AVFDigital
 # This file is distributed under the same license as the WP Extreme Customize plugin.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Extreme Customize 1.0.0\n"
@@ -12,390 +13,1024 @@ msgstr ""
 "Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: extreme_customize_wp/wp-extreme-customize.php:42
+# Módulos
+#: extreme_customize_wp/includes/class-modules.php
 msgid "Login Customizer"
 msgstr ""
 
-#: extreme_customize_wp/wp-extreme-customize.php:42
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Personaliza completamente la página de login"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
 msgid "Admin Customizer"
 msgstr ""
 
-#: extreme_customize_wp/wp-extreme-customize.php:42
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Personaliza el panel de administración"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
 msgid "Email Customizer"
 msgstr ""
 
-#: extreme_customize_wp/wp-extreme-customize.php:42
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Personaliza todos los emails de WordPress"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
 msgid "Security Extreme"
 msgstr ""
 
-#: extreme_customize_wp/wp-extreme-customize.php:42
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Configuración de seguridad avanzada"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "GDPR / Cookies"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Configuración de privacidad y cookies"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Maintenance Mode"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Modo mantenimiento con branding"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Plugin/Theme Manager"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Ocultar/renombrar plugins, temas y actualizaciones"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Favicon Manager"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Gestión completa de favicons"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Import/Export"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Importar y exportar configuraciones"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Multisite Support"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Soporte completo para WordPress Multisite"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
 msgid "SEO Extreme"
 msgstr ""
 
-#: extreme_customize_wp/wp-extreme-customize.php:42
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Optimización SEO avanzada"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
 msgid "Performance Extreme"
 msgstr ""
 
-#: extreme_customize_wp/includes/class-modules.php:56
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Optimización de rendimiento"
+msgstr ""
+
+#: extreme_customize_wp/includes/class-modules.php
 msgid "WP Extreme Customize - Módulos"
 msgstr ""
 
-#: extreme_customize_wp/includes/class-modules.php:57
+#: extreme_customize_wp/includes/class-modules.php
 msgid "Activa/desactiva las funcionalidades del plugin"
 msgstr ""
 
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:87
+#: extreme_customize_wp/includes/class-modules.php
+msgid "Configurar"
+msgstr ""
+
+# Admin Interface
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "WP Extreme Customize"
 msgstr ""
 
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:88
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "Extreme Customize"
 msgstr ""
 
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:89
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "Bienvenido a WP Extreme Customize"
 msgstr ""
 
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:90
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "El plugin más completo para personalizar tu WordPress. Transforma tu sitio según tu marca AVFDigital."
 msgstr ""
 
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:91
-msgid "Login Personalizado"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Login Customizer"
 msgstr ""
 
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:92
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "Cambia logo, colores, fondo y más"
 msgstr ""
 
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:93
-msgid "Admin Personalizado"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:94
-msgid "Personaliza el panel de WordPress"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:95
-msgid "Emails Personalizados"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:96
-msgid "Diseña todos los emails del sistema"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:97
-msgid "Seguridad Extrema"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:98
-msgid "Protege tu sitio con avanzada"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:99
-msgid "Configuración Rápida"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:100
-msgid "Configurar Plugin"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:101
-msgid "AVFDigital Branding"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:102
-msgid "Plugin desarrollado por"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:103
-msgid "Estadísticas"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:104
-msgid "PHP:"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:105
-msgid "WordPress:"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:106
-msgid "Módulos Activos:"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:107
-msgid "Guardando..."
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:108
-msgid "Guardado"
-msgstr ""
-
-#: extreme_customize_wp/includes/admin/class-admin-interface.php:109
-msgid "Error"
-msgstr ""
-
-#: extreme_customize_wp/includes/modules/module-login.php:110
-msgid "Permisos insuficientes"
-msgstr ""
-
-#: extreme_customize_wp/includes/modules/module-login.php:111
-msgid "Iniciar Sesión"
-msgstr ""
-
-#: extreme_customize_wp/includes/modules/module-login.php:112
-msgid "Logo"
-msgstr ""
-
-#: extreme_customize_wp/includes/modules/module-login.php:113
-msgid "Fondo"
-msgstr ""
-
-#: extreme_customize_wp/includes/modules/module-login.php:114
-msgid "Color de marca"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:1
-msgid "Plugin Name"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:2
-msgid "Description"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:3
-msgid "Version"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:4
-msgid "Author"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:5
-msgid "Plugin completo de personalización extrema para WordPress. Branding, seguridad, emails, administración y más."
-msgstr ""
-
-#: extreme_customize_wp/README.txt:6
-msgid "Características Principales"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:7
-msgid "Login Customizer Extremo"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:8
-msgid "Logo personalizado"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:9
-msgid "Colores de marca"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:10
-msgid "Fondo personalizado"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:11
-msgid "Mensajes customizados"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:12
-msgid "Redirecciones personalizadas"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:13
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "Admin Customizer"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:14
-msgid "Barra de administración personalizada"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Personaliza el panel de WordPress"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:15
-msgid "Menú reorganizable"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Emails Personalizados"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:16
-msgid "Ocultar elementos no deseados"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Diseña todos los emails del sistema"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:17
-msgid "Tema de administración personalizado"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:18
-msgid "Email Customizer"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:19
-msgid "Plantillas HTML personalizadas"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:20
-msgid "Branding en todos los emails"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:21
-msgid "Firma automática"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:22
-msgid "Configuración por tipo de email"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:23
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "Seguridad Extrema"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:24
-msgid "Limitador de intentos de login"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Protege tu sitio con configuración avanzada"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:25
-msgid "2FA opcional"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "GDPR / Cookies"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:26
-msgid "Headers de seguridad"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Cumple con la normativa de privacidad"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:27
-msgid "Ocultar información sensible"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Maintenance Mode"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:28
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Modo mantenimiento con tu branding"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Plugin/Theme Manager"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Oculta/renombra plugins y temas"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Favicon Manager"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Gestión completa de favicons"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Import/Export"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Copia de seguridad de configuraciones"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Multisite Support"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Gestión centralizada de la red"
+msgstr ""
+
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "SEO Extreme"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:29
-msgid "Meta tags avanzados"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Meta tags, Open Graph, Schema.org"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:30
-msgid "Open Graph personalizado"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:31
-msgid "Schema.org integrado"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:32
-msgid "Optimización de velocidad"
-msgstr ""
-
-#: extreme_customize_wp/README.txt:33
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
 msgid "Performance Extreme"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:34
-msgid "Compresión de imágenes"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Cache, minificación, lazy load"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:35
-msgid "Cache avanzado"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "AVFDigital Branding"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:36
-msgid "Minificación de recursos"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Plugin desarrollado por"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:37
-msgid "CDN integrado"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Estadísticas"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:38
-msgid "Requisitos"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "PHP:"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:39
-msgid "WordPress 5.8 o superior"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "WordPress:"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:40
-msgid "PHP 7.4 o superior"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Módulos Activos:"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:41
-msgid "Permisos de escritura en el directorio del plugin"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Multisite:"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:42
-msgid "Instalación"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Sí"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:43
-msgid "Descarga el plugin desde https://avfdigital.com/wp-extreme-customize"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "No"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:44
-msgid "Ve a WordPress → Plugins → Añadir nuevo → Subir plugin"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Accesos Rápidos"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:45
-msgid "Selecciona el archivo .zip y haz clic en Instalar ahora"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Módulos"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:46
-msgid "Activa el plugin desde la página de plugins"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Configuración"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:47
-msgid "Configura cada módulo desde el menú WP Extreme Customize"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Import/Export"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:48
-msgid "Configuración Rápida"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Guardando..."
 msgstr ""
 
-#: extreme_customize_wp/README.txt:49
-msgid "Una vez activado, accede a:"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Guardado"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:50
-msgid "WP Extreme Customize → Configuración General"
+#: extreme_customize_wp/includes/admin/class-admin-interface.php
+msgid "Error"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:51
-msgid "WP Extreme Customize → Login Customizer"
+# Login Customizer
+#: extreme_customize_wp/includes/modules/module-login.php
+msgid "Permisos insuficientes"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:52
-msgid "WP Extreme Customize → Admin Customizer"
+#: extreme_customize_wp/includes/modules/module-login.php
+msgid "Iniciar Sesión"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:53
-msgid "WP Extreme Customize → Email Customizer"
+#: extreme_customize_wp/includes/modules/module-login.php
+msgid "Logo"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:54
-msgid "WP Extreme Customize → Seguridad"
+#: extreme_customize_wp/includes/modules/module-login.php
+msgid "Fondo"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:55
-msgid "Soporte"
+#: extreme_customize_wp/includes/modules/module-login.php
+msgid "Color de marca"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:56
-msgid "Soporte técnico: soporte@avfdigital.com"
+# Email Customizer
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Restablecer contraseña"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:57
-msgid "Documentación: https://avfdigital.com/documentacion/wp-extreme-customize"
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Hola %s,"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:58
-msgid "Licencia"
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Hemos recibido una solicitud para restablecer la contraseña de tu cuenta."
 msgstr ""
 
-#: extreme_customize_wp/README.txt:59
-msgid "GPL-2.0+ - Ver archivo license.txt para más información."
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Restablecer contraseña"
 msgstr ""
 
-#: extreme_customize_wp/README.txt:60
-msgid "Agradecimientos"
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Si no solicitaste este cambio, ignora este correo."
 msgstr ""
 
-#: extreme_customize_wp/README.txt:61
-msgid "Desarrollado con ❤️ por AVFDigital para la comunidad de WordPress."
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Saludos,"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Nuevo comentario"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "ha dejado un comentario en"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Comentario:"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Comentario pendiente de moderación"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Autor:"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-emails.php
+msgid "Para moderar, haz clic aquí"
+msgstr ""
+
+# Maintenance Mode
+#: extreme_customize_wp/includes/modules/module-maintenance.php
+msgid "Sitio en mantenimiento"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-maintenance.php
+msgid "Estamos realizando mejoras"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-maintenance.php
+msgid "Por favor, vuelve en %d segundos"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-maintenance.php
+msgid "Volver al inicio"
+msgstr ""
+
+# GDPR
+#: extreme_customize_wp/includes/modules/module-gdpr.php
+msgid "Este sitio utiliza cookies para mejorar tu experiencia"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-gdpr.php
+msgid "Aceptar"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-gdpr.php
+msgid "Política de cookies"
+msgstr ""
+
+# Manager
+#: extreme_customize_wp/includes/modules/module-manager.php
+msgid "Plugin/Theme Manager"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-manager.php
+msgid "Ocultar"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-manager.php
+msgid "Nuevo nombre"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-manager.php
+msgid "Ocultar actualización"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-manager.php
+msgid "Desactivar editor de plugins"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-manager.php
+msgid "Desactiva la edición de archivos de plugins en el panel de administración"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-manager.php
+msgid "Desactivar editor de temas"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-manager.php
+msgid "Desactiva la edición de archivos de temas en el panel de administración"
+msgstr ""
+
+# Favicon
+#: extreme_customize_wp/includes/modules/module-favicon.php
+msgid "Favicon principal (ICO)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-favicon.php
+msgid "Apple Touch Icon"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-favicon.php
+msgid "Android Chrome / Web App Manifest"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-favicon.php
+msgid "Microsoft Tile (Windows 8/10)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-favicon.php
+msgid "Color del tile de Microsoft"
+msgstr ""
+
+# Import/Export
+#: extreme_customize_wp/includes/modules/module-import-export.php
+msgid "Import/Export"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-import-export.php
+msgid "Exportar Configuración"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-import-export.php
+msgid "Descarga un archivo JSON con toda la configuración del plugin."
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-import-export.php
+msgid "Importar Configuración"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-import-export.php
+msgid "Sube un archivo JSON exportado previamente."
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-import-export.php
+msgid "Sobrescribir configuración existente"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-import-export.php
+msgid "Importados %d módulos correctamente"
+msgstr ""
+
+# Multisite
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "WP Extreme Customize - Configuración de Red"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Aplica configuraciones globales a todos los sitios de la red."
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Branding Global"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Aplicar logo, colores y branding a todos los sitios"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Login Global"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Usar la misma configuración de login en todos los sitios"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Emails Globales"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Usar las mismas plantillas de email en todos los sitios"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Seguridad Global"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Aplicar configuración de seguridad a todos los sitios"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "GDPR Global"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Aplicar configuración GDPR a todos los sitios"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Sincronización"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Sincroniza la configuración del sitio principal a todos los sitios de la red."
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Sincronizar todos los sitios"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Sincronizado correctamente: %d sitios"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-multisite.php
+msgid "Error al sincronizar"
+msgstr ""
+
+# Admin Customizer
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Admin Customizer"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Barra de Admin"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Menú de Admin"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Footer"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Ayuda"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "CSS Personalizado"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Elemento"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "ID"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Título"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "URL"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Acción"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Añadir enlace"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Eliminar"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Logo personalizado"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Sube un logo para la barra de administración (máx. 28px de alto)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Ocultar elementos del menú principal"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Elemento del menú"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Ocultar submenús"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Reordenar menú"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Arrastra para reordenar (requiere funcionalidad drag & drop)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Texto del footer de administración"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Texto personalizado"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Deja en blanco para usar el texto por defecto de WordPress"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Ayuda contextual personalizada"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Define textos de ayuda personalizados para las pantallas de administración"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Pantalla"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Contenido"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Añadir ayuda"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "CSS personalizado para el panel de administración"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Este CSS se aplicará a todas las páginas del panel de administración"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "CSS personalizado para la página de login"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-admin.php
+msgid "Este CSS se aplicará a la página de login (wp-login.php)"
+msgstr ""
+
+# Security
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Seguridad Extrema"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Rate Limiting (Límite de intentos de login)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Activar rate limiting"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Máximo de intentos"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Tiempo de bloqueo (minutos)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Autenticación de Dos Factores (2FA)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Activar 2FA"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Permite a los usuarios activar autenticación de dos factores"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Headers de Seguridad"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Activar headers de seguridad"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Activar HSTS"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Requiere HTTPS válido en el sitio"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Activar CSP (Content Security Policy)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Política CSP"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Restringir REST API a usuarios logueados"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Desactivar pingbacks"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Forzar HTTPS"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Redirecciona automáticamente HTTP a HTTPS"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Ocultar versión de WordPress"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Elimina el número de versión de los headers y feeds"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Desactivar XML-RPC"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Autenticación de Dos Factores (2FA)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Activar 2FA"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Requiere un código de autenticación adicional al iniciar sesión"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Clave secreta"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Guarda esta clave en tu aplicación de autenticación (Google Authenticator, Authy, etc.)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-security.php
+msgid "Demasiados intentos fallidos. Intenta de nuevo en %d minutos."
+msgstr ""
+
+# SEO
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "SEO Extreme"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "General"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Open Graph"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Twitter Cards"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Schema.org"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Avanzado"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Meta Description por defecto"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Usado en páginas que no son entradas (archivos, búsqueda, 404, etc.)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Título por defecto"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Descripción por defecto"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Imagen por defecto"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "URL de la imagen (mín. 1200x630px)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Tipo por defecto"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Sitio web"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Artículo"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Producto"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Tipo de tarjeta"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Resumen"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Resumen con imagen grande"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "App"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Player"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "@usuario del sitio"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "@creador"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Logo de la organización"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "URL del logo para schema.org Organization"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Canonical personalizado"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Sobrescribe la URL canónica globalmente"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "robots.txt personalizado"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-seo.php
+msgid "Contenido completo del robots.txt (deja en blanco para usar el de WordPress)"
+msgstr ""
+
+# Performance
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Performance Extreme"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Performance"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Cache"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Minificación"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Imágenes"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Preload/DNS"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Configuración de Cache"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Activar cache del navegador"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Tiempo de cache (segundos)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Minificar CSS"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Minifica archivos CSS (requiere servicio externo o plugin complementario)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Minificar JavaScript"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Minifica archivos JS (requiere servicio externo o plugin complementario)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Combinar CSS"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Combinar JavaScript"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Optimización de Imágenes"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Lazy Load"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Carga perezosa nativa del navegador (loading=\"lazy\")"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Optimizar imágenes al subir"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Conecta con servicios como ShortPixel, Imagify, etc."
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Convertir a WebP"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Preload de Recursos Críticos"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Añade recursos que se deben precargar (CSS crítico, fuentes, JS crítico)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "URL"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Tipo (as)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Añadir recurso"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "CSS Crítico"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "URL del archivo CSS crítico para preload"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "DNS Prefetch"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Dominios para DNS prefetch (fonts.googleapis.com, ajax.googleapis.com, etc.)"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Dominio"
+msgstr ""
+
+#: extreme_customize_wp/includes/modules/module-performance.php
+msgid "Añadir dominio"
 msgstr ""
