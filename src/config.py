@@ -32,14 +32,11 @@ FALLBACK_OPENROUTER_FREE_MODELS = list(FALLBACK_FREE_MODELS)
 FALLBACK_ANYAPI_FREE_MODELS = list(FALLBACK_FREE_MODELS)
 
 
-def is_free_model(model_info: dict | str) -> bool:
+def is_free_model(model_info: dict) -> bool:
     """
     Verifica de forma estricta que un modelo sea 100% gratuito.
     Filtra cualquier modelo que tenga coste mayor a cero en prompt o completion.
     """
-    if isinstance(model_info, str):
-        return model_info.endswith(":free") or ":free" in model_info
-
     if not isinstance(model_info, dict):
         return False
 
@@ -55,37 +52,15 @@ def is_free_model(model_info: dict | str) -> bool:
         prompt_cost = 0.0
         completion_cost = 0.0
 
+    # Excluir explícitamente cualquier modelo con coste monetario mayor a cero
     if prompt_cost > 0.0 or completion_cost > 0.0:
         return False
 
+    # Aceptar si finaliza en :free o si los costos explícitos son 0
     if model_id.endswith(":free") or (prompt_cost == 0.0 and completion_cost == 0.0):
         return True
 
     return False
-
-
-def get_provider_endpoints() -> list[dict]:
-    """Retorna la lista de proveedores de API configurados en .env."""
-    providers = []
-    if OPENROUTER_API_KEY:
-        providers.append({
-            "name": "OpenRouter",
-            "base_url": OPENROUTER_BASE_URL,
-            "api_key": OPENROUTER_API_KEY,
-        })
-    if ANYAPI_API_KEY:
-        providers.append({
-            "name": "AnyAPI",
-            "base_url": ANYAPI_BASE_URL,
-            "api_key": ANYAPI_API_KEY,
-        })
-    if not providers:
-        providers.append({
-            "name": "OpenRouter",
-            "base_url": OPENROUTER_BASE_URL,
-            "api_key": OPENROUTER_API_KEY or "dummy_key",
-        })
-    return providers
 
 
 def get_openrouter_free_models() -> list[dict]:
@@ -170,7 +145,8 @@ def get_anyapi_free_models() -> list[dict]:
 
 def get_available_free_models() -> list[dict]:
     """
-    Obtiene la lista consolidada de modelos GRATUITOS de los proveedores habilitados.
+    Obtiene la lista consolidada de modelos GRATUITOS de los proveedores habilitados
+    (OpenRouter y AnyAPI). Garantiza de forma estricta que SOLO se devuelvan modelos gratuitos.
     """
     all_candidates = []
 
@@ -198,7 +174,8 @@ def get_available_free_models() -> list[dict]:
 
 def select_best_free_model(candidates: list) -> dict | str:
     """
-    Selecciona el mejor candidato a modelo gratuito.
+    Selecciona el mejor candidato a modelo gratuito basándose en la prioridad definida.
+    Soporta tanto lista de diccionarios (nuevo formato) como lista de strings (legacy).
     """
     preferences = [
         "meta-llama/llama-3.1-8b-instruct:free",

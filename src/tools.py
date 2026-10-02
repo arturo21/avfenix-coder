@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-tools.py - Suite completa de Herramientas Nativas de Disco, Sistema, Fuentes y Plugins.
+tools.py - Suite completa de Herramientas Nativas de Disco, Sistema, Fuentes, Plugins,
+MCP Registry, AST, Swarm, Git Avanzado, Sandbox y Enriquecimiento Visual TUI (Paso 6).
 """
 
 import os
@@ -12,33 +13,52 @@ import time
 from datetime import datetime
 import urllib.request
 import re
+import logging
 
 from src.sources_manager import SourcesManager
 from src.plugins.plugin_manager import PluginManager
 from src.plugins.package_manager import PackageManager
+from src.user_style_memory import UserStyleMemory
+from src.mcp_registry import MCPRegistry
+from src.code_ast_indexer import ASTCodeIndexer
+from src.multi_agent_swarm import SwarmOrchestrator
+from src.git_advanced_manager import GitAdvancedManager
+from src.sandbox_executor import SandboxExecutor
+from src.tui_enrichment_manager import TUIEnrichmentManager
+
+logger = logging.getLogger("AVFenixTools")
 
 CURRENT_WORKING_DIR = os.getcwd()
-CONTEXT_INJECTIONS = []
 
 
-def set_working_dir(directory: str) -> str:
-    """Establece el directorio de trabajo activo."""
+def set_working_dir(path: str) -> str:
+    """Cambia el directorio raíz de trabajo activo para todas las operaciones del agente."""
     global CURRENT_WORKING_DIR
     try:
-        abs_path = os.path.abspath(directory)
+        abs_path = os.path.abspath(path)
         if not os.path.exists(abs_path):
-            os.makedirs(abs_path, exist_ok=True)
+            return f"Error: El directorio '{abs_path}' no existe."
+        if not os.path.isdir(abs_path):
+            return f"Error: '{abs_path}' no es un directorio válido."
+
         os.chdir(abs_path)
         CURRENT_WORKING_DIR = abs_path
-        return f"Éxito: Directorio de trabajo cambiado a '{CURRENT_WORKING_DIR}'."
+        return f"Éxito: Directorio de trabajo establecido en '{CURRENT_WORKING_DIR}'."
     except Exception as e:
         return f"Error al cambiar directorio de trabajo: {e}"
 
 
-def add_context(context_text: str) -> str:
-    """Inyecta contexto adicional en el historial del agente."""
-    CONTEXT_INJECTIONS.append(context_text)
-    return f"Éxito: Contexto Inyectado ({len(context_text)} caracteres)."
+def add_context(path_or_text: str) -> str:
+    """Lee un archivo de documentación o regla de negocio para inyectarlo como contexto."""
+    try:
+        if os.path.exists(path_or_text) and os.path.isfile(path_or_text):
+            with open(path_or_text, "r", encoding="utf-8", errors="ignore") as f:
+                content = f.read()
+            return f"[Contexto Inyectado desde '{path_or_text}']:\n{content}"
+        else:
+            return f"[Contexto Inyectado]:\n{path_or_text}"
+    except Exception as e:
+        return f"Error al cargar contexto: {e}"
 
 
 def read_file(path: str) -> str:
@@ -161,7 +181,7 @@ def search_code(query: str, directory: str = ".") -> str:
             return f"Error: El directorio '{directory}' no existe."
 
         matches = []
-        ignore_dirs = {".git", "__pycache__", ".venv", "venv", "node_modules", ".pytest_cache", ".avfenix_backups", ".avfenix_sources"}
+        ignore_dirs = {".git", "__pycache__", ".venv", "venv", "node_modules", ".pytest_cache", ".avfenix_backups", ".avfenix_sources", ".avfenix_mcp", ".avfenix_ast", ".avfenix_swarm", ".avfenix_sandbox"}
 
         for root, dirs, files in os.walk(directory):
             dirs[:] = [d for d in dirs if d not in ignore_dirs]
@@ -192,7 +212,7 @@ def find_files(pattern: str, directory: str = ".") -> str:
             return f"Error: El directorio '{directory}' no existe."
 
         matches = []
-        ignore_dirs = {".git", "__pycache__", ".venv", "venv", "node_modules", ".pytest_cache", ".avfenix_backups", ".avfenix_sources"}
+        ignore_dirs = {".git", "__pycache__", ".venv", "venv", "node_modules", ".pytest_cache", ".avfenix_backups", ".avfenix_sources", ".avfenix_mcp", ".avfenix_ast", ".avfenix_swarm", ".avfenix_sandbox"}
 
         for root, dirs, files in os.walk(directory):
             dirs[:] = [d for d in dirs if d not in ignore_dirs]
@@ -222,13 +242,8 @@ def delete_file(path: str) -> str:
 
 
 def run_tests(test_path: str = ".") -> str:
-    """Ejecuta pruebas unitarias usando pytest o unittest."""
+    """Ejecuta pruebas unitarias usando pytest o unittest con prevención de pycache stale."""
     try:
-        # Prevenir caché previa de bytecode
-        pycache_dir = os.path.join(os.getcwd(), "__pycache__")
-        if os.path.exists(pycache_dir):
-            shutil.rmtree(pycache_dir, ignore_errors=True)
-
         env = os.environ.copy()
         env["PYTHONPATH"] = os.getcwd() + ":" + env.get("PYTHONPATH", "")
         env["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -257,22 +272,13 @@ def run_tests(test_path: str = ".") -> str:
 
 def git_status(directory: str = ".") -> str:
     """Consulta el estado del repositorio Git en la carpeta indicada."""
-    try:
-        result = subprocess.run(
-            ["git", "status", "-s"],
-            cwd=directory,
-            text=True,
-            capture_output=True,
-            timeout=10
-        )
-        if result.returncode != 0:
-            return f"Error: No es un repositorio Git válido o fallo en comando: {result.stderr.strip()}"
-        output = result.stdout.strip()
-        if not output:
-            return "Git Status: El árbol de trabajo está limpio (sin cambios pendientes)."
-        return f"--- Git Status ---\n{output}"
-    except Exception as e:
-        return f"Error al consultar git status: {e}"
+    git_mgr = GitAdvancedManager(directory)
+    if not git_mgr.is_git_repo():
+        return "Error: No es un repositorio Git válido o fallo en comando."
+    _, out, _ = git_mgr._run_git_cmd(["status", "-s"])
+    if not out:
+        return "Git Status: El árbol de trabajo está limpio (sin cambios pendientes)."
+    return f"--- Git Status ---\n{out}"
 
 
 def create_backup(path: str) -> str:
@@ -356,7 +362,7 @@ def tree_directory(path: str = ".", max_depth: int = 3) -> str:
         if not os.path.exists(path):
             return f"Error: El directorio '{path}' no existe."
 
-        ignore_dirs = {".git", "__pycache__", ".venv", "venv", "node_modules", ".pytest_cache", ".avfenix_backups", ".avfenix_sources"}
+        ignore_dirs = {".git", "__pycache__", ".venv", "venv", "node_modules", ".pytest_cache", ".avfenix_backups", ".avfenix_sources", ".avfenix_mcp", ".avfenix_ast", ".avfenix_swarm", ".avfenix_sandbox"}
         tree_lines = [f"📦 {os.path.basename(os.path.abspath(path)) or path}"]
 
         def build_tree(current_dir, prefix="", current_depth=1):
@@ -389,6 +395,134 @@ def tree_directory(path: str = ".", max_depth: int = 3) -> str:
 
 
 # -------------------------------------------------------------------------
+# 🎨 HERRAMIENTAS DE ENRIQUECIMIENTO VISUAL TUI (PASO 6)
+# -------------------------------------------------------------------------
+
+def ui_render_directory_tree(path: str = ".") -> str:
+    """Genera una vista interactiva y estructurada en árbol del directorio indicado."""
+    mgr = TUIEnrichmentManager()
+    return mgr.render_directory_tree(path)
+
+
+def ui_preview_file(filepath: str, max_lines: int = 150) -> str:
+    """Genera una vista previa formateada con metadatos y código del archivo especificado."""
+    mgr = TUIEnrichmentManager()
+    return mgr.preview_file(filepath, max_lines)
+
+
+def ui_render_markdown(path_or_content: str) -> str:
+    """Renderiza de forma enriquecida un documento Markdown o spec.md."""
+    mgr = TUIEnrichmentManager()
+    return mgr.render_markdown_formatted(path_or_content)
+
+
+def ui_render_status_table(category: str = "all") -> str:
+    """Genera una vista de tabla con métricas y estado del sistema (MCP, AST, Swarm, Memoria, Sandbox)."""
+    mgr = TUIEnrichmentManager()
+    return mgr.render_status_table(category)
+
+
+# -------------------------------------------------------------------------
+# 🛡️ HERRAMIENTAS DE AISLAMIENTO Y SEGURIDAD (SANDBOX - PASO 5)
+# -------------------------------------------------------------------------
+
+def sandbox_execute_command(command: str = "", timeout: int = 30) -> str:
+    """Ejecuta un comando de consola dentro del entorno sandbox seguro e insulado."""
+    executor = SandboxExecutor()
+    return executor.execute_command(command, timeout)
+
+
+def sandbox_get_policy() -> str:
+    """Obtiene la política de seguridad activa del entorno sandbox."""
+    executor = SandboxExecutor()
+    return executor.get_security_policy()
+
+
+def sandbox_get_audit_log(limit: int = 10) -> str:
+    """Obtiene el historial de auditoría de comandos ejecutados en el sandbox."""
+    executor = SandboxExecutor()
+    return executor.get_audit_log(limit)
+
+
+# -------------------------------------------------------------------------
+# 🔀 HERRAMIENTAS DE FLUJOS GIT AVANZADOS Y VISUALIZACIÓN DE DIFFS (PASO 4)
+# -------------------------------------------------------------------------
+
+def git_get_diff(filepath: str = "", cached: bool = False) -> str:
+    """Obtiene las diferencias de código (git diff) unificadas para un archivo o todo el proyecto."""
+    git_mgr = GitAdvancedManager()
+    return git_mgr.get_diff(filepath, cached)
+
+
+def git_create_branch(branch_name: str) -> str:
+    """Crea y activa una nueva rama de funcionalidad (feature branch)."""
+    git_mgr = GitAdvancedManager()
+    return git_mgr.create_feature_branch(branch_name)
+
+
+def git_smart_commit(message: str = "", auto_message: bool = True) -> str:
+    """Agrega cambios al staging y realiza un commit con mensaje Conventional Commits auto-generado."""
+    git_mgr = GitAdvancedManager()
+    return git_mgr.commit_changes(message, auto_message)
+
+
+def git_generate_pr_summary(base_branch: str = "main") -> str:
+    """Genera un informe completo para Pull Request (PR) comparando ramas en Git."""
+    git_mgr = GitAdvancedManager()
+    return git_mgr.create_pull_request_summary(base_branch)
+
+
+# -------------------------------------------------------------------------
+# 🤖 HERRAMIENTAS DE ENJAMBRE Y ORQUESTACIÓN MULTI-AGENTE (PASO 3)
+# -------------------------------------------------------------------------
+
+def spawn_subagent(role: str, task: str, context: str = "") -> str:
+    """Instancia y delega una tarea a un sub-agente especializado (architect, coder, tester, doc)."""
+    orchestrator = SwarmOrchestrator()
+    return orchestrator.spawn_subagent(role, task, context)
+
+
+def run_swarm_pipeline(task_description: str) -> str:
+    """Ejecuta el pipeline completo de desarrollo multi-agente (Architect ➔ Coder ➔ Tester ➔ Doc)."""
+    orchestrator = SwarmOrchestrator()
+    return orchestrator.run_swarm_pipeline(task_description)
+
+
+def get_swarm_status() -> str:
+    """Obtiene el historial de ejecuciones y estado actual del enjambre multi-agente."""
+    orchestrator = SwarmOrchestrator()
+    return orchestrator.get_swarm_status()
+
+
+# -------------------------------------------------------------------------
+# 📐 HERRAMIENTAS DE NAVEGACIÓN SEMÁNTICA AST (PASO 2)
+# -------------------------------------------------------------------------
+
+def ast_index_repository(directory: str = ".") -> str:
+    """Escanea e indexa mediante AST todos los símbolos de un repositorio o carpeta."""
+    indexer = ASTCodeIndexer()
+    return indexer.index_directory(directory)
+
+
+def ast_find_definition(symbol_name: str) -> str:
+    """Busca la definición exacta (archivo, línea, firma) de un símbolo en el proyecto."""
+    indexer = ASTCodeIndexer()
+    return indexer.find_definition(symbol_name)
+
+
+def ast_get_file_outline(filepath: str) -> str:
+    """Genera el esquema sintáctico estructurado (clases, funciones, métodos) de un archivo."""
+    indexer = ASTCodeIndexer()
+    return indexer.get_file_outline(filepath)
+
+
+def ast_find_references(symbol_name: str, directory: str = ".") -> str:
+    """Encuentra todas las apariciones y referencias de uso de un símbolo en el código."""
+    indexer = ASTCodeIndexer()
+    return indexer.find_references(symbol_name, directory)
+
+
+# -------------------------------------------------------------------------
 # 📚 HERRAMIENTAS DE APARTADO DE FUENTES
 # -------------------------------------------------------------------------
 
@@ -414,6 +548,59 @@ def remove_source(identifier: str) -> str:
     """Elimina una fuente del índice por su ID o nombre."""
     sm = SourcesManager()
     return sm.remove_source(identifier)
+
+
+# -------------------------------------------------------------------------
+# 🧠 HERRAMIENTAS DE MEMORIA Y PERFIL DE ESTILO
+# -------------------------------------------------------------------------
+
+def learn_user_style(pattern: str, category: str = "explicit") -> str:
+    """Registra una regla o preferencia de estilo de código observada."""
+    mem = UserStyleMemory()
+    return mem.learn_preference(pattern, category)
+
+
+def get_user_style_profile() -> str:
+    """Obtiene el resumen formateado del perfil de estilo de programación del usuario."""
+    mem = UserStyleMemory()
+    return mem.get_profile_summary()
+
+
+# -------------------------------------------------------------------------
+# 🌐 HERRAMIENTAS DEL REGISTRO Y CLIENTE MCP (PASO 1)
+# -------------------------------------------------------------------------
+
+def mcp_register_server(
+    server_id: str,
+    name: str,
+    command: str,
+    args: str = "",
+    transport_type: str = "stdio",
+    description: str = ""
+) -> str:
+    """Registra un nuevo servidor MCP en el catálogo del proyecto."""
+    reg = MCPRegistry()
+    args_list = [a.strip() for a in args.split() if a.strip()] if args else []
+    return reg.register_server(
+        server_id=server_id,
+        name=name,
+        command=command,
+        args=args_list,
+        transport_type=transport_type,
+        description=description
+    )
+
+
+def mcp_list_servers() -> str:
+    """Muestra la lista de servidores MCP registrados en el proyecto."""
+    reg = MCPRegistry()
+    return reg.list_servers()
+
+
+def mcp_unregister_server(server_id: str) -> str:
+    """Elimina un servidor MCP del registro."""
+    reg = MCPRegistry()
+    return reg.unregister_server(server_id)
 
 
 # -------------------------------------------------------------------------
